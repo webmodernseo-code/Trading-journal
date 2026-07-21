@@ -8,7 +8,7 @@ describe('calculatePnl', () => {
       exitPrice: 1.087,
       quantity: 1,
       direction: 'long',
-      pointValue: 10,
+      pointValue: 10000,
     });
     expect(result).toBeCloseTo(20, 5);
   });
@@ -19,7 +19,7 @@ describe('calculatePnl', () => {
       exitPrice: 1.085,
       quantity: 1,
       direction: 'short',
-      pointValue: 10,
+      pointValue: 10000,
     });
     expect(result).toBeCloseTo(20, 5);
   });
@@ -30,7 +30,7 @@ describe('calculatePnl', () => {
       exitPrice: 1.085,
       quantity: 1,
       direction: 'long',
-      pointValue: 10,
+      pointValue: 10000,
     });
     expect(result).toBeCloseTo(-20, 5);
   });
@@ -42,7 +42,7 @@ describe('calculateRisk', () => {
       entryPrice: 1.085,
       stopLossPrice: 1.08,
       quantity: 1,
-      pointValue: 10,
+      pointValue: 10000,
     });
     expect(result).toBeCloseTo(50, 5);
   });
@@ -52,7 +52,7 @@ describe('calculateRisk', () => {
       entryPrice: 1.085,
       stopLossPrice: null,
       quantity: 1,
-      pointValue: 10,
+      pointValue: 10000,
     });
     expect(result).toBeNull();
   });

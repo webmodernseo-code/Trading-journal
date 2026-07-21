@@ -10,7 +10,7 @@ export function calculatePnl(params: {
   const { entryPrice, exitPrice, quantity, direction, pointValue } = params;
   const rawDelta = exitPrice - entryPrice;
   const signedDelta = direction === 'long' ? rawDelta : -rawDelta;
-  return signedDelta * quantity * pointValue * 1000;
+  return signedDelta * quantity * pointValue;
 }
 
 export function calculateRisk(params: {
@@ -21,7 +21,7 @@ export function calculateRisk(params: {
 }): number | null {
   const { entryPrice, stopLossPrice, quantity, pointValue } = params;
   if (stopLossPrice === null) return null;
-  return Math.abs(entryPrice - stopLossPrice) * quantity * pointValue * 1000;
+  return Math.abs(entryPrice - stopLossPrice) * quantity * pointValue;
 }
 
 export function calculateRMultiple(pnlAmount: number, riskAmount: number | null): number | null {
