@@ -11,7 +11,10 @@
 ## Global Constraints
 
 - Reference spec: `docs/superpowers/specs/2026-07-21-journal-trading-design.md` — every task below implements a section of it.
-- Dark theme only, no light mode (spec §6). Colors: background `#0b0d10`, card surface `#12151a`, border `rgba(255,255,255,0.06)`, accent (emerald) `#10b981`, gain `#34d399`, loss `#fb7185`, primary text `#f3f4f6`, muted text `#9ca3af`, primary CTA button `#ffffff` background on `#0b0d10` text.
+- **Dark theme (default) and light theme, with a manual toggle** (spec §6 — supersedes the earlier "dark only" decision). All color usage MUST go through the Tailwind tokens below (which resolve to CSS custom properties), never hardcoded hex/`white`/`black`, so the toggle works everywhere without per-page changes.
+  - Dark tokens: `bg` `#0b0d10`, `sidebar` `#0d0f13`, `surface` `#12151a`, `surface-2` `#171b21`, `border-subtle` `rgba(255,255,255,0.07)`, `accent` `#10b981`, `accent-dim` `rgba(16,185,129,0.14)`, `gain` `#34d399`, `loss` `#fb7185`, `text-primary` `#f3f4f6`, `text-muted` `#8b93a1`, `text-faint` `#565d6b`, `cta` (primary button bg) `#ffffff`.
+  - Light tokens (independently tuned, not an inversion): `bg` `#eef1f0`, `sidebar` `#e6eae8`, `surface` `#ffffff`, `surface-2` `#f2f5f4`, `border-subtle` `rgba(13,23,20,0.09)`, `accent` `#059669`, `accent-dim` `rgba(5,150,105,0.10)`, `gain` `#15803d`, `loss` `#dc2626`, `text-primary` `#10171a`, `text-muted` `#5b6b66`, `text-faint` `#93a29c`, `cta` `#10171a`.
+  - Primary CTA buttons use `bg-cta text-bg` (the `text-bg` reuse is intentional: it always equals that theme's page-background color, giving the correct inverted-contrast text in both themes without a separate token).
 - App currency is EUR only — no multi-currency accounts in the app (spec §8, §10).
 - French + English from v1, on every page (spec §2, §7.4) — every user-facing string goes through next-intl, with an entry in both `messages/fr.json` and `messages/en.json`.
 - Manual trade entry only — no broker auto-sync or CSV import in this plan (spec §10).
@@ -43,6 +46,8 @@ src/app/globals.css                        — Tailwind entry + design tokens
 src/app/[locale]/layout.tsx                — root layout (locale provider)
 src/app/[locale]/(auth)/register/          — registration page + action
 src/app/[locale]/(auth)/login/             — login page
+src/app/[locale]/(app)/layout.tsx          — shared sidebar shell (Task 25)
+src/app/[locale]/(app)/Sidebar.tsx, TopBar.tsx, ThemeToggle.tsx
 src/app/[locale]/(app)/instruments/        — instruments CRUD
 src/app/[locale]/(app)/strategies/         — strategies CRUD
 src/app/[locale]/(app)/checklist/          — checklist rules CRUD
@@ -71,7 +76,7 @@ src/app/[locale]/(app)/settings/
 - Test: `src/lib/__tests__/sanity.test.ts`
 
 **Interfaces:**
-- Produces: Tailwind theme colors `bg`, `surface`, `border-subtle`, `accent`, `gain`, `loss` usable as `bg-bg`, `bg-surface`, `text-accent`, etc. in every later UI task.
+- Produces: Tailwind theme colors `bg`, `sidebar`, `surface`, `surface-2`, `border-subtle`, `accent`, `accent-dim`, `gain`, `loss`, `text-primary`, `text-muted`, `text-faint`, `cta` — usable as `bg-bg`, `bg-surface`, `text-accent`, `bg-cta`, etc. in every later UI task. These resolve to CSS custom properties (not literal hex), so Task 25's theme toggle changes them everywhere for free.
 
 - [ ] **Step 1: Create `package.json`**
 
@@ -162,7 +167,7 @@ export default nextConfig;
 
 (Task 6 will wrap this with `createNextIntlPlugin` once next-intl is wired in.)
 
-- [ ] **Step 5: Create `tailwind.config.ts` with design tokens**
+- [ ] **Step 5: Create `tailwind.config.ts` mapping tokens to CSS custom properties**
 
 ```typescript
 import type { Config } from 'tailwindcss';
@@ -172,14 +177,19 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        bg: '#0b0d10',
-        surface: '#12151a',
-        'border-subtle': 'rgba(255,255,255,0.06)',
-        accent: '#10b981',
-        gain: '#34d399',
-        loss: '#fb7185',
-        'text-primary': '#f3f4f6',
-        'text-muted': '#9ca3af',
+        bg: 'var(--color-bg)',
+        sidebar: 'var(--color-sidebar)',
+        surface: 'var(--color-surface)',
+        'surface-2': 'var(--color-surface-2)',
+        'border-subtle': 'var(--color-border)',
+        accent: 'var(--color-accent)',
+        'accent-dim': 'var(--color-accent-dim)',
+        gain: 'var(--color-gain)',
+        loss: 'var(--color-loss)',
+        'text-primary': 'var(--color-text)',
+        'text-muted': 'var(--color-muted)',
+        'text-faint': 'var(--color-faint)',
+        cta: 'var(--color-cta)',
       },
     },
   },
@@ -188,6 +198,8 @@ const config: Config = {
 
 export default config;
 ```
+
+Every color is a CSS variable, not a literal hex — this is what lets Task 25's dark/light toggle repaint the whole app by flipping one attribute, with zero changes to any component that already uses these Tailwind classes.
 
 - [ ] **Step 6: Create `postcss.config.js`**
 
@@ -200,18 +212,52 @@ module.exports = {
 };
 ```
 
-- [ ] **Step 7: Create `src/app/globals.css`**
+- [ ] **Step 7: Create `src/app/globals.css` with dark (default) and light theme tokens**
 
 ```css
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --color-bg: #0b0d10;
+  --color-sidebar: #0d0f13;
+  --color-surface: #12151a;
+  --color-surface-2: #171b21;
+  --color-border: rgba(255, 255, 255, 0.07);
+  --color-accent: #10b981;
+  --color-accent-dim: rgba(16, 185, 129, 0.14);
+  --color-gain: #34d399;
+  --color-loss: #fb7185;
+  --color-text: #f3f4f6;
+  --color-muted: #8b93a1;
+  --color-faint: #565d6b;
+  --color-cta: #ffffff;
+}
+
+:root[data-theme='light'] {
+  --color-bg: #eef1f0;
+  --color-sidebar: #e6eae8;
+  --color-surface: #ffffff;
+  --color-surface-2: #f2f5f4;
+  --color-border: rgba(13, 23, 20, 0.09);
+  --color-accent: #059669;
+  --color-accent-dim: rgba(5, 150, 105, 0.1);
+  --color-gain: #15803d;
+  --color-loss: #dc2626;
+  --color-text: #10171a;
+  --color-muted: #5b6b66;
+  --color-faint: #93a29c;
+  --color-cta: #10171a;
+}
+
 body {
-  background-color: #0b0d10;
-  color: #f3f4f6;
+  background-color: var(--color-bg);
+  color: var(--color-text);
 }
 ```
+
+Dark is the default (no `data-theme` attribute needed); `data-theme="light"` on `<html>` switches every token. Task 25 adds the toggle button and the `localStorage` persistence; Task 12's root layout adds the blocking init script that applies the saved preference before first paint (avoiding a flash of the wrong theme).
 
 - [ ] **Step 8: Create temporary root layout and home page**
 
@@ -1594,6 +1640,15 @@ export default async function LocaleLayout({
 
   return (
     <html lang={locale}>
+      <head>
+        <script
+          // Blocking (not `defer`/`async`) so the saved theme applies before first paint —
+          // otherwise the page flashes dark before switching to a saved light preference.
+          dangerouslySetInnerHTML={{
+            __html: `try{var t=localStorage.getItem('theme');if(t==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}`,
+          }}
+        />
+      </head>
       <body className="bg-bg text-text-primary">
         <NextIntlClientProvider messages={messages}>{children}</NextIntlClientProvider>
       </body>
@@ -1830,7 +1885,7 @@ export default function RegisterPage({ params }: { params: { locale: string } })
           {t('password')}
           <input name="password" type="password" required minLength={8} className="mt-1 w-full rounded-md bg-bg p-2 text-text-primary" />
         </label>
-        <button type="submit" className="w-full rounded-md bg-white py-2 font-bold text-bg">
+        <button type="submit" className="w-full rounded-md bg-cta py-2 font-bold text-bg">
           {t('registerSubmit')}
         </button>
       </form>
@@ -1869,7 +1924,7 @@ export default function LoginPage({ params }: { params: { locale: string } }) {
           {t('password')}
           <input name="password" type="password" required className="mt-1 w-full rounded-md bg-bg p-2 text-text-primary" />
         </label>
-        <button type="submit" className="w-full rounded-md bg-white py-2 font-bold text-bg">
+        <button type="submit" className="w-full rounded-md bg-cta py-2 font-bold text-bg">
           {t('loginSubmit')}
         </button>
       </form>
@@ -2011,7 +2066,7 @@ export function InstrumentForm() {
         {t('pointValue')}
         <input name="pointValue" type="number" step="any" required className="mt-1 block rounded-md bg-bg p-2 text-text-primary" />
       </label>
-      <button type="submit" className="rounded-md bg-white px-4 py-2 font-bold text-bg">
+      <button type="submit" className="rounded-md bg-cta px-4 py-2 font-bold text-bg">
         {t('add')}
       </button>
     </form>
@@ -2163,7 +2218,7 @@ export function StrategyForm() {
         {t('description')}
         <input name="description" className="mt-1 block rounded-md bg-bg p-2 text-text-primary" />
       </label>
-      <button type="submit" className="rounded-md bg-white px-4 py-2 font-bold text-bg">
+      <button type="submit" className="rounded-md bg-cta px-4 py-2 font-bold text-bg">
         {t('add')}
       </button>
     </form>
@@ -2310,7 +2365,7 @@ export function ChecklistForm() {
         {t('label')}
         <input name="label" required className="mt-1 block rounded-md bg-bg p-2 text-text-primary" />
       </label>
-      <button type="submit" className="rounded-md bg-white px-4 py-2 font-bold text-bg">
+      <button type="submit" className="rounded-md bg-cta px-4 py-2 font-bold text-bg">
         {t('add')}
       </button>
     </form>
@@ -2587,7 +2642,7 @@ export function TradeForm({
         <textarea name="notes" rows={3} className="mt-1 block w-full rounded-md bg-bg p-2 text-text-primary" />
       </label>
 
-      <button type="submit" className="rounded-md bg-white px-4 py-2 font-bold text-bg">
+      <button type="submit" className="rounded-md bg-cta px-4 py-2 font-bold text-bg">
         {t('save')}
       </button>
     </form>
@@ -2770,7 +2825,7 @@ export function ScreenshotUpload({ tradeId }: { tradeId: string }) {
         {t('caption')}
         <input name="caption" className="mt-1 block rounded-md bg-bg p-2 text-text-primary" />
       </label>
-      <button type="submit" className="rounded-md bg-white px-4 py-2 font-bold text-bg">
+      <button type="submit" className="rounded-md bg-cta px-4 py-2 font-bold text-bg">
         {t('upload')}
       </button>
     </form>
@@ -3000,7 +3055,7 @@ export default async function TradesPage({
     <main className="mx-auto max-w-4xl p-8">
       <div className="mb-4 flex items-center justify-between">
         <h1 className="text-xl font-bold text-text-primary">Journal</h1>
-        <Link href="/trades/new" className="rounded-md bg-white px-4 py-2 font-bold text-bg">
+        <Link href="/trades/new" className="rounded-md bg-cta px-4 py-2 font-bold text-bg">
           + Nouveau trade
         </Link>
       </div>
@@ -3168,7 +3223,7 @@ export function Calculator({
           className="mt-1 block w-full rounded-md bg-bg p-2 text-text-primary"
         />
       </label>
-      <button type="button" onClick={handleCalculate} className="rounded-md bg-white px-4 py-2 font-bold text-bg">
+      <button type="button" onClick={handleCalculate} className="rounded-md bg-cta px-4 py-2 font-bold text-bg">
         {t('calculate')}
       </button>
       {error && <p className="text-loss">{error}</p>}
@@ -3325,7 +3380,7 @@ export function TradeForm({
         <textarea name="notes" rows={3} className="mt-1 block w-full rounded-md bg-bg p-2 text-text-primary" />
       </label>
 
-      <button type="submit" className="rounded-md bg-white px-4 py-2 font-bold text-bg">
+      <button type="submit" className="rounded-md bg-cta px-4 py-2 font-bold text-bg">
         {t('save')}
       </button>
     </form>
@@ -3886,7 +3941,7 @@ export default async function SettingsPage() {
             <option value="en">English</option>
           </select>
         </label>
-        <button type="submit" className="rounded-md bg-white px-4 py-2 font-bold text-bg">
+        <button type="submit" className="rounded-md bg-cta px-4 py-2 font-bold text-bg">
           {t('save')}
         </button>
       </form>
@@ -3946,11 +4001,335 @@ git commit -m "feat: add settings page for account balance, risk %, loss limits,
 
 ---
 
+### Task 25: App shell — sidebar navigation, theme/language/account controls
+
+**Files:**
+- Create: `src/app/[locale]/(app)/layout.tsx`
+- Create: `src/app/[locale]/(app)/Sidebar.tsx`
+- Create: `src/app/[locale]/(app)/TopBar.tsx`
+- Create: `src/app/[locale]/(app)/ThemeToggle.tsx`
+- Modify: `messages/fr.json`, `messages/en.json`
+
+**Interfaces:**
+- Consumes: `requireUser()` (Task 13), `calculateDailyLossStatus` + `LossLimitStatus` (Task 9), `trades` table (Task 4), the `--color-*` / `data-theme` mechanism and blocking init script (Task 1, Task 12).
+- Produces: a shared layout applied automatically by Next.js to every existing page under `(app)/` (Tasks 14-24) — no changes needed in those pages' own files.
+
+This is a retrofit: Tasks 14-24 were built and manually verified as bare pages before this task exists. Once this layout lands, all of them render inside the sidebar shell with no further edits, because Next.js applies `(app)/layout.tsx` to every nested route structurally, regardless of the order tasks were implemented in.
+
+- [ ] **Step 1: Create `src/app/[locale]/(app)/ThemeToggle.tsx`**
+
+```tsx
+'use client';
+
+import { useEffect, useState } from 'react';
+
+export function ThemeToggle() {
+  const [theme, setThemeState] = useState<'dark' | 'light'>('dark');
+
+  useEffect(() => {
+    const current = document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+    setThemeState(current);
+  }, []);
+
+  function apply(mode: 'dark' | 'light') {
+    if (mode === 'light') {
+      document.documentElement.setAttribute('data-theme', 'light');
+    } else {
+      document.documentElement.removeAttribute('data-theme');
+    }
+    localStorage.setItem('theme', mode);
+    setThemeState(mode);
+  }
+
+  return (
+    <div className="flex items-center gap-0.5 rounded-full border border-border-subtle p-0.5">
+      <button
+        type="button"
+        onClick={() => apply('dark')}
+        aria-label="Dark theme"
+        className={`flex h-5 w-6 items-center justify-center rounded-full text-[10px] ${
+          theme === 'dark' ? 'bg-accent-dim text-accent' : 'text-text-muted'
+        }`}
+      >
+        ●
+      </button>
+      <button
+        type="button"
+        onClick={() => apply('light')}
+        aria-label="Light theme"
+        className={`flex h-5 w-6 items-center justify-center rounded-full text-[10px] ${
+          theme === 'light' ? 'bg-accent-dim text-accent' : 'text-text-muted'
+        }`}
+      >
+        ○
+      </button>
+    </div>
+  );
+}
+```
+
+- [ ] **Step 2: Create `src/app/[locale]/(app)/TopBar.tsx`**
+
+```tsx
+'use client';
+
+import { usePathname } from 'next/navigation';
+import Link from 'next/link';
+import { useTranslations } from 'next-intl';
+import { ThemeToggle } from './ThemeToggle';
+
+export function TopBar() {
+  const pathname = usePathname();
+  const t = useTranslations('nav');
+  const withoutLocale = pathname.replace(/^\/(fr|en)/, '') || '/';
+  const currentLocale = pathname.startsWith('/en') ? 'en' : 'fr';
+
+  return (
+    <div className="flex items-center justify-end gap-2 px-6 pt-4">
+      <ThemeToggle />
+      <div className="flex overflow-hidden rounded-md border border-border-subtle text-xs">
+        <Link
+          href={`/fr${withoutLocale}`}
+          className={`px-2 py-1 ${currentLocale === 'fr' ? 'bg-accent-dim font-bold text-accent' : 'text-text-muted'}`}
+        >
+          FR
+        </Link>
+        <Link
+          href={`/en${withoutLocale}`}
+          className={`px-2 py-1 ${currentLocale === 'en' ? 'bg-accent-dim font-bold text-accent' : 'text-text-muted'}`}
+        >
+          EN
+        </Link>
+      </div>
+      <Link
+        href="/settings"
+        className="flex h-6 w-6 items-center justify-center rounded-full border border-border-subtle bg-surface-2 text-[10px] text-text-muted"
+        title={t('account')}
+      >
+        •
+      </Link>
+    </div>
+  );
+}
+```
+
+- [ ] **Step 3: Create `src/app/[locale]/(app)/Sidebar.tsx`**
+
+```tsx
+'use client';
+
+import { usePathname } from 'next/navigation';
+import { useTranslations } from 'next-intl';
+import Link from 'next/link';
+import type { LossLimitStatus } from '@/lib/loss-limits';
+
+const NAV_GROUPS = [
+  {
+    labelKey: 'overview',
+    links: [
+      { href: '/dashboard', labelKey: 'dashboard' },
+      { href: '/dashboard/heatmaps', labelKey: 'heatmaps' },
+      { href: '/erreurs', labelKey: 'erreurs' },
+    ],
+  },
+  {
+    labelKey: 'journal',
+    links: [{ href: '/trades', labelKey: 'trades' }],
+  },
+  {
+    labelKey: 'configuration',
+    links: [
+      { href: '/strategies', labelKey: 'strategies' },
+      { href: '/instruments', labelKey: 'instruments' },
+      { href: '/checklist', labelKey: 'checklist' },
+    ],
+  },
+  {
+    labelKey: 'tools',
+    links: [{ href: '/tools/position-size-calculator', labelKey: 'calculator' }],
+  },
+];
+
+export function Sidebar({ todayPnl, todayStatus }: { todayPnl: number; todayStatus: LossLimitStatus }) {
+  const pathname = usePathname();
+  const t = useTranslations('nav');
+
+  function isActive(href: string) {
+    const withoutLocale = pathname.replace(/^\/(fr|en)/, '') || '/';
+    return withoutLocale === href;
+  }
+
+  return (
+    <nav className="flex w-56 flex-shrink-0 flex-col border-r border-border-subtle bg-sidebar p-3">
+      <div className="mb-4 flex items-center gap-2 px-2 py-1 text-base font-bold text-text-primary">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <rect x="4" y="3" width="16" height="18" rx="3" stroke="currentColor" className="text-accent" strokeWidth="1.8" />
+          <path
+            d="M7.5 14L10 11.5L12.5 15L16.5 9.5"
+            stroke="currentColor"
+            className="text-accent"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+        Journal
+      </div>
+
+      {NAV_GROUPS.map((group) => (
+        <div key={group.labelKey} className="mb-4">
+          <div className="px-2 pb-1 text-[10px] font-bold uppercase tracking-wide text-text-faint">
+            {t(group.labelKey)}
+          </div>
+          {group.links.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className={`block rounded-md px-2 py-1.5 text-sm ${
+                isActive(link.href)
+                  ? 'bg-surface font-semibold text-text-primary'
+                  : 'text-text-muted hover:text-text-primary'
+              }`}
+            >
+              {t(link.labelKey)}
+            </Link>
+          ))}
+        </div>
+      ))}
+
+      <div className="mt-auto border-t border-border-subtle pt-3">
+        <div className="rounded-lg border border-border-subtle bg-surface p-3">
+          <div className="flex items-baseline justify-between">
+            <span className="text-[10px] font-bold uppercase tracking-wide text-text-faint">{t('today')}</span>
+            <span className={`text-sm font-bold ${todayPnl >= 0 ? 'text-gain' : 'text-loss'}`}>
+              {todayPnl >= 0 ? '+' : ''}
+              {todayPnl.toFixed(0)} €
+            </span>
+          </div>
+          {todayStatus.limit !== null && (
+            <>
+              <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-surface-2">
+                <div
+                  className="h-full rounded-full bg-accent"
+                  style={{ width: `${Math.min(todayStatus.percentUsed ?? 0, 100)}%` }}
+                />
+              </div>
+              <div className="mt-1.5 text-[10.5px] text-text-muted">
+                {(todayStatus.percentUsed ?? 0).toFixed(0)}% {t('ofDailyLimit')}
+              </div>
+            </>
+          )}
+        </div>
+      </div>
+    </nav>
+  );
+}
+```
+
+- [ ] **Step 4: Create `src/app/[locale]/(app)/layout.tsx`**
+
+```tsx
+import { eq, and, isNotNull } from 'drizzle-orm';
+import { db } from '@/db/client';
+import { trades } from '@/db/schema';
+import { requireUser } from '@/lib/auth-helpers';
+import { calculateDailyLossStatus } from '@/lib/loss-limits';
+import { Sidebar } from './Sidebar';
+import { TopBar } from './TopBar';
+
+export default async function AppLayout({ children }: { children: React.ReactNode }) {
+  const user = await requireUser();
+
+  const closedTrades = await db
+    .select({ pnlAmount: trades.pnlAmount, exitedAt: trades.exitedAt })
+    .from(trades)
+    .where(and(eq(trades.userId, user.id), eq(trades.status, 'closed'), isNotNull(trades.exitedAt)));
+
+  const records = closedTrades.map((t) => ({ pnlAmount: t.pnlAmount ?? 0, exitedAt: t.exitedAt! }));
+  const now = new Date();
+  const todayStatus = calculateDailyLossStatus(records, user.dailyLossLimit, now);
+  const todayPnl = records
+    .filter((t) => t.exitedAt.toDateString() === now.toDateString())
+    .reduce((sum, t) => sum + t.pnlAmount, 0);
+
+  return (
+    <div className="flex min-h-screen bg-bg">
+      <Sidebar todayPnl={todayPnl} todayStatus={todayStatus} />
+      <div className="min-w-0 flex-1">
+        <TopBar />
+        {children}
+      </div>
+    </div>
+  );
+}
+```
+
+- [ ] **Step 5: Add `nav` translation keys**
+
+Add to `messages/fr.json`:
+
+```json
+"nav": {
+  "overview": "Aperçu",
+  "journal": "Journal",
+  "configuration": "Configuration",
+  "tools": "Outils",
+  "dashboard": "Dashboard",
+  "heatmaps": "Heatmaps",
+  "erreurs": "Erreurs",
+  "trades": "Trades",
+  "strategies": "Stratégies",
+  "instruments": "Instruments",
+  "checklist": "Checklist",
+  "calculator": "Calculateur",
+  "today": "Aujourd'hui",
+  "ofDailyLimit": "de la limite journalière",
+  "account": "Compte"
+}
+```
+
+Add to `messages/en.json`:
+
+```json
+"nav": {
+  "overview": "Overview",
+  "journal": "Journal",
+  "configuration": "Configuration",
+  "tools": "Tools",
+  "dashboard": "Dashboard",
+  "heatmaps": "Heatmaps",
+  "erreurs": "Errors",
+  "trades": "Trades",
+  "strategies": "Strategies",
+  "instruments": "Instruments",
+  "checklist": "Checklist",
+  "calculator": "Calculator",
+  "today": "Today",
+  "ofDailyLimit": "of daily limit",
+  "account": "Account"
+}
+```
+
+- [ ] **Step 6: Manually verify**
+
+Run: `npm run dev`, log in, visit `/fr/instruments` — confirm the sidebar now wraps the page (grouped nav, logo, "Aujourd'hui" widget), and that visiting `/fr/dashboard` highlights "Dashboard" as active while the others don't. Click the theme toggle, confirm the whole page (sidebar included) repaints to the light palette, reload the page and confirm the light theme persisted (no flash of dark before it applies). Click "EN" in the top-right and confirm it navigates to the English version of the *same* page (e.g. `/fr/trades` → `/en/trades`, not back to the homepage).
+Expected: sidebar present on every `(app)` page without editing them; active link highlight correct; theme persists across reload without flashing; language switch preserves the current path.
+
+- [ ] **Step 7: Commit**
+
+```bash
+git add "src/app/[locale]/(app)/layout.tsx" "src/app/[locale]/(app)/Sidebar.tsx" "src/app/[locale]/(app)/TopBar.tsx" "src/app/[locale]/(app)/ThemeToggle.tsx" messages/
+git commit -m "feat: add app shell with sidebar nav, theme toggle, and language switch"
+```
+
+---
+
 ## Self-Review Notes
 
-- **Spec coverage:** §3 data model → Tasks 3-4. §4 calculations → Tasks 5-6. §5.1 auth → Task 13. §5.2 dashboard (incl. loss limits, heatmaps) → Tasks 21-22. §5.3 erreurs → Tasks 11, 23. §5.4-5.5 trades → Tasks 17-19. §5.6 management pages → Tasks 14-16, 20, 24. §2 i18n → Task 12 (infra) + every page task's translation-key steps. §6 visual identity → Task 1 (tokens) applied throughout. §8 error handling (validation, blocked deletes, empty states, screenshot limits, division-by-zero) → covered in Tasks 5 (null risk), 9 (buildStatus), 14/15 (in-use delete guard), 18 (upload validation), 19 (empty state). §9 testing → every calculation task (5-11) is TDD with Vitest. Landing page (§7) is intentionally out of this plan per the brainstorming decision to split it into a second plan.
+- **Spec coverage:** §3 data model → Tasks 3-4. §4 calculations → Tasks 5-6. §5.1 auth → Task 13. §5.2 dashboard (incl. loss limits, heatmaps) → Tasks 21-22. §5.3 erreurs → Tasks 11, 23. §5.4-5.5 trades → Tasks 17-19. §5.6 management pages → Tasks 14-16, 20, 24. §2 i18n → Task 12 (infra) + every page task's translation-key steps. §6 visual identity (dark+light tokens) → Task 1, plus Task 25 for the toggle control and shared navigation chrome §6.1. §8 error handling (validation, blocked deletes, empty states, screenshot limits, division-by-zero) → covered in Tasks 5 (null risk), 9 (buildStatus), 14/15 (in-use delete guard), 18 (upload validation), 19 (empty state). §9 testing → every calculation task (5-11) is TDD with Vitest. Landing page (§7) is intentionally out of this plan per the brainstorming decision to split it into a second plan.
 - **Placeholder scan:** no TBD/TODO markers; every step has complete, runnable code.
-- **Type consistency:** `Direction` (`'long' | 'short'`) defined once in `calculations.ts` and reused via the schema's `text({enum})` columns. `ChecklistPhase` defined once in `errors-analytics.ts` and reused in the schema, the trade form, and the trade detail/erreurs pages. `Instrument`, `Strategy`, `ChecklistRule`, `Trade` types all sourced from `src/db/schema.ts` `$inferSelect`, never redefined ad hoc.
+- **Type consistency:** `Direction` (`'long' | 'short'`) defined once in `calculations.ts` and reused via the schema's `text({enum})` columns. `ChecklistPhase` defined once in `errors-analytics.ts` and reused in the schema, the trade form, and the trade detail/erreurs pages. `Instrument`, `Strategy`, `ChecklistRule`, `Trade` types all sourced from `src/db/schema.ts` `$inferSelect`, never redefined ad hoc. `LossLimitStatus` defined once in `loss-limits.ts` (Task 9) and reused unmodified by both the dashboard page (Task 21) and the sidebar's "Aujourd'hui" widget (Task 25).
+- **Sequencing note:** Task 25 (app shell) is placed after Task 24 rather than right after Task 13, deliberately — Next.js applies `(app)/layout.tsx` structurally to every nested route the moment it exists, so Tasks 14-24 do not need to be revisited once the shared sidebar lands. Their own "manually verify" steps will show bare, unstyled-chrome pages until Task 25 runs; that is expected, not a defect.
 
 ---
 
