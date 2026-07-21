@@ -127,13 +127,40 @@ Deux fonctionnalités repérées dans les captures d'inspiration, jugées trop l
 
 Direction validée après itérations visuelles : premium, sombre, contrasté.
 
-- **Fond** : graphite très sombre (`#0b0d10` pour le fond principal, `#12151a` pour les cartes/surfaces élevées), bordures fines `rgba(255,255,255,0.06)`.
-- **Accent d'identité** : émeraude/teal (`#10b981`) — utilisé pour le logo, l'état actif de la navigation, les courbes de graphique, les badges. *(Une variante avec accent corail `#ffa361` a été explorée et écartée au profit de l'émeraude.)*
-- **Boutons d'action principaux** : blanc pur (`#ffffff` sur fond `#0b0d10`) — fort contraste, look "premium SaaS" (référence Linear/Stripe), distinct de l'accent d'identité.
-- **Couleurs sémantiques** : vert (`#34d399`) pour les gains, rouge/rose (`#fb7185`) pour les pertes — distincts de l'accent émeraude pour rester lisibles indépendamment.
+L'app propose **deux thèmes (sombre par défaut, clair en option)** avec bascule manuelle — décision qui annule et remplace le "100% dark theme, pas de mode clair" envisagé plus tôt. Chaque thème est pensé séparément (pas une inversion brute des couleurs) pour rester premium dans les deux cas ; tous les composants doivent utiliser des tokens de couleur (variables), jamais de couleurs codées en dur, pour que la bascule fonctionne partout sans exception.
+
+**Thème sombre (par défaut)**
+- Fond : graphite très sombre (`#0b0d10` fond principal, `#0d0f13` panneau de la barre latérale, `#12151a` cartes/surfaces élevées, `#171b21` sous-éléments), bordures fines `rgba(255,255,255,0.07)`.
+- Accent d'identité : émeraude/teal (`#10b981`) — logo, état actif de la navigation, courbes de graphique, badges.
+- Boutons d'action principaux : blanc pur (`#ffffff` sur texte `#0b0d10`) — fort contraste, look "premium SaaS" (référence Linear/Stripe), distinct de l'accent d'identité.
+- Couleurs sémantiques : vert (`#34d399`) pour les gains, rouge/rose (`#fb7185`) pour les pertes.
+- Texte : `#f3f4f6` (principal), `#8b93a1` (atténué), `#565d6b` (très atténué, labels de groupe).
+
+**Thème clair**
+- Fond : blanc cassé à légère dominante froide (`#eef1f0` fond principal, `#e6eae8` panneau de la barre latérale, `#ffffff` cartes/surfaces — les cartes ressortent en blanc pur sur le fond légèrement teinté), bordures `rgba(13,23,20,0.09)`.
+- Accent d'identité : émeraude assombri (`#059669`, pas le même hex que le sombre) pour rester lisible sur fond clair.
+- Boutons d'action principaux : encre foncée (`#10171a` sur texte `#eef1f0`) — l'inversion du bouton blanc-sur-sombre, pas une simple réutilisation de l'accent.
+- Couleurs sémantiques : vert (`#15803d`) pour les gains, rouge (`#dc2626`) pour les pertes — assombris par rapport au thème sombre pour le contraste sur blanc.
+- Texte : `#10171a` (principal), `#5b6b66` (atténué), `#93a29c` (très atténué).
+
+*(Une variante avec accent corail `#ffa361` a été explorée et écartée au profit de l'émeraude, avant l'ajout du thème clair.)*
+
 - **Typographie** : sans-serif géométrique moderne (ex: Inter ou Geist).
 - **Logo** : silhouette de carnet aux coins arrondis, fine ligne d'en-tête, courbe ascendante (type coche de progression) à l'intérieur — évoque à la fois "journal" et "progression". Testé et lisible à taille favicon.
-- Une palette light (fond blanc) a été testée mais écartée : on reste 100% dark theme pour la v1 (pas de mode clair).
+- **Bascule de thème** : accessible depuis n'importe quelle page (voir navigation, section 5.1bis), préférence mémorisée (cookie ou stockage local), démarre en sombre par défaut pour un nouveau compte.
+
+### 6.1 Navigation de l'app (barre latérale)
+
+Élément partagé par toutes les pages authentifiées (absent des versions précédentes de cette spec — corrigé après relecture visuelle) :
+
+- **Barre latérale gauche persistante**, regroupée par sens :
+  - *Aperçu* : Dashboard, Heatmaps, Erreurs
+  - *Journal* : Trades
+  - *Configuration* : Stratégies, Instruments, Checklist
+  - *Outils* : Calculateur de taille de position
+  - En bas : widget **"Aujourd'hui"** (P&L du jour + % de la limite de perte journalière utilisée), visible depuis n'importe quelle page.
+- **Ligne utilitaire en haut à droite du contenu** (pas une barre de navigation complète, juste des contrôles de compte) : bascule thème clair/sombre, sélecteur de langue FR/EN, menu compte (avatar → accès à Paramètres, déconnexion).
+- Chaque page garde son propre titre en haut de son contenu (pas de barre de titre globale redondante).
 
 ## 7. Landing page
 
