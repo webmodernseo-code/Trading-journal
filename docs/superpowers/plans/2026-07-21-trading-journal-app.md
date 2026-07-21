@@ -1013,12 +1013,13 @@ describe('heatmapBySymbolAndMonth', () => {
 describe('heatmapBySymbolAndDuration', () => {
   it('buckets trades by duration and sums pnl', () => {
     const result = heatmapBySymbolAndDuration(trades);
-    // EURUSD trade 1: 30 minutes -> "15-30m" is inclusive up to 30, so "15-30m"
-    expect(result.EURUSD['15-30m']).toBe(10);
+    // EURUSD trade 1: 30 minutes -> inclusive up to 30, so "<30m"
+    expect(result.EURUSD['<30m']).toBe(10);
     // EURUSD trade 2: 2 hours -> "1h-4h"
     expect(result.EURUSD['1h-4h']).toBe(-5);
-    // XAUUSD trade: 15 minutes -> "15-30m"
-    expect(result.XAUUSD['15-30m']).toBe(20);
+    // XAUUSD trade: 15 minutes -> "<30m" (this bucket has no lower floor,
+    // so any short trade — even a 2-minute scalp — lands here too)
+    expect(result.XAUUSD['<30m']).toBe(20);
   });
 });
 ```
@@ -1064,7 +1065,7 @@ export function heatmapBySymbolAndMonth(trades: HeatmapTrade[]): SymbolBuckets {
 }
 
 const DURATION_BUCKETS: { label: string; maxMinutes: number }[] = [
-  { label: '15-30m', maxMinutes: 30 },
+  { label: '<30m', maxMinutes: 30 },
   { label: '30m-1h', maxMinutes: 60 },
   { label: '1h-4h', maxMinutes: 240 },
   { label: '4h-1d', maxMinutes: 1440 },
@@ -3664,7 +3665,7 @@ import { HeatmapGrid } from './HeatmapGrid';
 
 const DAY_LABELS = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
 const MONTH_LABELS = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Août', 'Sep', 'Oct', 'Nov', 'Déc'];
-const DURATION_LABELS = ['15-30m', '30m-1h', '1h-4h', '4h-1d', '>1d'];
+const DURATION_LABELS = ['<30m', '30m-1h', '1h-4h', '4h-1d', '>1d'];
 
 export default async function HeatmapsPage() {
   const user = await requireUser();
