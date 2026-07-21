@@ -1,6 +1,9 @@
 # Skills reference clone (separate local repo, not part of this project)
 claude skills/
 
+# Brainstorming visual companion session files
+.superpowers/
+
 # Node / Next.js
 node_modules/
 .next/
