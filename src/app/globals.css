@@ -2,7 +2,39 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --color-bg: #0b0d10;
+  --color-sidebar: #0d0f13;
+  --color-surface: #12151a;
+  --color-surface-2: #171b21;
+  --color-border: rgba(255, 255, 255, 0.07);
+  --color-accent: #10b981;
+  --color-accent-dim: rgba(16, 185, 129, 0.14);
+  --color-gain: #34d399;
+  --color-loss: #fb7185;
+  --color-text: #f3f4f6;
+  --color-muted: #8b93a1;
+  --color-faint: #565d6b;
+  --color-cta: #ffffff;
+}
+
+:root[data-theme='light'] {
+  --color-bg: #eef1f0;
+  --color-sidebar: #e6eae8;
+  --color-surface: #ffffff;
+  --color-surface-2: #f2f5f4;
+  --color-border: rgba(13, 23, 20, 0.09);
+  --color-accent: #059669;
+  --color-accent-dim: rgba(5, 150, 105, 0.1);
+  --color-gain: #15803d;
+  --color-loss: #dc2626;
+  --color-text: #10171a;
+  --color-muted: #5b6b66;
+  --color-faint: #93a29c;
+  --color-cta: #10171a;
+}
+
 body {
-  background-color: #0b0d10;
-  color: #f3f4f6;
+  background-color: var(--color-bg);
+  color: var(--color-text);
 }
