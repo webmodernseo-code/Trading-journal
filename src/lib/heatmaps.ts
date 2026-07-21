@@ -31,7 +31,7 @@ export function heatmapBySymbolAndMonth(trades: HeatmapTrade[]): SymbolBuckets {
 }
 
 const DURATION_BUCKETS: { label: string; maxMinutes: number }[] = [
-  { label: '15-30m', maxMinutes: 30 },
+  { label: '<30m', maxMinutes: 30 },
   { label: '30m-1h', maxMinutes: 60 },
   { label: '1h-4h', maxMinutes: 240 },
   { label: '4h-1d', maxMinutes: 1440 },

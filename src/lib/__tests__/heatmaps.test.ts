@@ -48,11 +48,12 @@ describe('heatmapBySymbolAndMonth', () => {
 describe('heatmapBySymbolAndDuration', () => {
   it('buckets trades by duration and sums pnl', () => {
     const result = heatmapBySymbolAndDuration(trades);
-    // EURUSD trade 1: 30 minutes -> "15-30m" is inclusive up to 30, so "15-30m"
-    expect(result.EURUSD['15-30m']).toBe(10);
+    // EURUSD trade 1: 30 minutes -> inclusive up to 30, so "<30m"
+    expect(result.EURUSD['<30m']).toBe(10);
     // EURUSD trade 2: 2 hours -> "1h-4h"
     expect(result.EURUSD['1h-4h']).toBe(-5);
-    // XAUUSD trade: 15 minutes -> "15-30m"
-    expect(result.XAUUSD['15-30m']).toBe(20);
+    // XAUUSD trade: 15 minutes -> "<30m" (this bucket has no lower floor,
+    // so any short trade — even a 2-minute scalp — lands here too)
+    expect(result.XAUUSD['<30m']).toBe(20);
   });
 });
