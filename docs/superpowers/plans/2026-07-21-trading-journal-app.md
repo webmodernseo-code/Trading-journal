@@ -30,7 +30,7 @@
 
 ```
 package.json, tsconfig.json, next.config.ts, tailwind.config.ts, postcss.config.js, drizzle.config.ts
-middleware.ts                              — next-intl locale routing
+src/middleware.ts                          — next-intl locale routing
 src/i18n/request.ts                        — next-intl server config
 messages/fr.json, messages/en.json         — translation strings
 src/db/schema.ts                           — Drizzle table definitions
@@ -1528,7 +1528,7 @@ git commit -m "feat: add checklist errors analytics aggregation"
 - Create: `messages/en.json`
 - Create: `src/i18n/routing.ts`
 - Create: `src/i18n/request.ts`
-- Create: `middleware.ts`
+- Create: `src/middleware.ts`
 - Modify: `next.config.ts`
 - Delete/replace: `src/app/layout.tsx`, `src/app/page.tsx` → moved under `src/app/[locale]/`
 
@@ -1590,11 +1590,13 @@ export default getRequestConfig(async ({ requestLocale }) => {
 });
 ```
 
-- [ ] **Step 5: Create `middleware.ts`** (repo root)
+- [ ] **Step 5: Create `src/middleware.ts`**
+
+Next.js requires `middleware.ts` inside `src/` (not at the repo root) whenever the project uses a `src/` directory — it silently fails to register otherwise (empty `middleware-manifest.json`, no locale redirect).
 
 ```typescript
 import createMiddleware from 'next-intl/middleware';
-import { routing } from './src/i18n/routing';
+import { routing } from './i18n/routing';
 
 export default createMiddleware(routing);
 
@@ -1683,7 +1685,7 @@ Expected: visiting `http://localhost:3000` redirects to `/fr` and shows "Journal
 - [ ] **Step 9: Commit**
 
 ```bash
-git add messages/ src/i18n/ middleware.ts next.config.ts src/app/
+git add messages/ src/i18n/ src/middleware.ts next.config.ts src/app/
 git commit -m "feat: add next-intl fr/en locale routing"
 ```
 
