@@ -4,6 +4,7 @@ import path from 'node:path';
 export default defineConfig({
   test: {
     environment: 'node',
+    env: { TZ: 'UTC' },
   },
   resolve: {
     alias: { '@': path.resolve(__dirname, './src') },
