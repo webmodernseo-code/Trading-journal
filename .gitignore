@@ -1,0 +1,14 @@
+# Skills reference clone (separate local repo, not part of this project)
+claude skills/
+
+# Node / Next.js
+node_modules/
+.next/
+out/
+.env
+.env.local
+.env.*.local
+
+# OS
+.DS_Store
+Thumbs.db
