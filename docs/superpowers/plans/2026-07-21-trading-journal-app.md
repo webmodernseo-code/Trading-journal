@@ -11,6 +11,7 @@
 ## Global Constraints
 
 - Reference spec: `docs/superpowers/specs/2026-07-21-journal-trading-design.md` — every task below implements a section of it.
+- **All date/calendar-boundary logic is UTC, always.** The test environment forces `TZ=UTC` (Task 1's `vitest.config.ts`) to match Vercel's serverless runtime. Never use local-timezone-implicit date operations in test fixtures or application code — use explicit UTC accessors (`getUTCDay`, `getUTCMonth`, etc., as Task 8 does) or rely on the forced-UTC environment (as Task 9's `date-fns` calls do) consistently, not a mix of both assumptions.
 - **Dark theme (default) and light theme, with a manual toggle** (spec §6 — supersedes the earlier "dark only" decision). All color usage MUST go through the Tailwind tokens below (which resolve to CSS custom properties), never hardcoded hex/`white`/`black`, so the toggle works everywhere without per-page changes.
   - Dark tokens: `bg` `#0b0d10`, `sidebar` `#0d0f13`, `surface` `#12151a`, `surface-2` `#171b21`, `border-subtle` `rgba(255,255,255,0.07)`, `accent` `#10b981`, `accent-dim` `rgba(16,185,129,0.14)`, `gain` `#34d399`, `loss` `#fb7185`, `text-primary` `#f3f4f6`, `text-muted` `#8b93a1`, `text-faint` `#565d6b`, `cta` (primary button bg) `#ffffff`.
   - Light tokens (independently tuned, not an inversion): `bg` `#eef1f0`, `sidebar` `#e6eae8`, `surface` `#ffffff`, `surface-2` `#f2f5f4`, `border-subtle` `rgba(13,23,20,0.09)`, `accent` `#059669`, `accent-dim` `rgba(5,150,105,0.10)`, `gain` `#15803d`, `loss` `#dc2626`, `text-primary` `#10171a`, `text-muted` `#5b6b66`, `text-faint` `#93a29c`, `cta` `#10171a`.
@@ -292,6 +293,11 @@ import path from 'node:path';
 export default defineConfig({
   test: {
     environment: 'node',
+    // Forces UTC regardless of the host machine's local timezone, so
+    // date-fns calendar-boundary functions (startOfDay/startOfWeek/etc.,
+    // used from Task 9 onward) are deterministic in dev, CI, and prod
+    // (Vercel's serverless runtime is UTC) alike.
+    env: { TZ: 'UTC' },
   },
   resolve: {
     alias: { '@': path.resolve(__dirname, './src') },
