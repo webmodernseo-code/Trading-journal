@@ -3079,6 +3079,7 @@ export function TradeFilters({ instruments, strategies }: { instruments: Instrum
 ```tsx
 import Link from 'next/link';
 import { eq, and, desc } from 'drizzle-orm';
+import { getTranslations } from 'next-intl/server';
 import { db } from '@/db/client';
 import { trades, instruments, strategies } from '@/db/schema';
 import { requireUser } from '@/lib/auth-helpers';
@@ -3113,22 +3114,23 @@ export default async function TradesPage({
   }
 
   const instrumentById = new Map(instrumentRows.map((i) => [i.id, i.name]));
+  const t = await getTranslations('trades');
 
   return (
     <main className="mx-auto max-w-4xl p-8">
       <div className="mb-4 flex items-center justify-between">
-        <h1 className="text-xl font-bold text-text-primary">Journal</h1>
+        <h1 className="text-xl font-bold text-text-primary">{t('listTitle')}</h1>
         <Link href="/trades/new" className="rounded-md bg-cta px-4 py-2 font-bold text-bg">
-          + Nouveau trade
+          + {t('newTitle')}
         </Link>
       </div>
       <TradeFilters instruments={instrumentRows} strategies={strategyRows} />
       <table className="w-full text-left text-text-primary">
         <thead className="text-text-muted">
           <tr>
-            <th className="p-2">Date</th>
-            <th className="p-2">Instrument</th>
-            <th className="p-2">Sens</th>
+            <th className="p-2">{t('date')}</th>
+            <th className="p-2">{t('instrument')}</th>
+            <th className="p-2">{t('direction')}</th>
             <th className="p-2">P&amp;L</th>
           </tr>
         </thead>
@@ -3147,11 +3149,13 @@ export default async function TradesPage({
           ))}
         </tbody>
       </table>
-      {rows.length === 0 && <p className="mt-4 text-text-muted">Aucun trade pour l'instant.</p>}
+      {rows.length === 0 && <p className="mt-4 text-text-muted">{t('empty')}</p>}
     </main>
   );
 }
 ```
+
+`TradesPage` is an async Server Component, so it must use `getTranslations` from `next-intl/server` (awaited), never the sync `useTranslations` hook — same rule as every async page from Task 13 onward. The heading, "new trade" link text, table headers (Date/Instrument/Direction), and empty-state message must go through `t(...)` rather than being hardcoded French. (`newTitle` already exists in the `trades` namespace from Task 17; `date`/`instrument`/`direction`/`listTitle`/`empty` are new below.)
 
 - [ ] **Step 3: Add translation keys**
 
@@ -3160,7 +3164,10 @@ Add to `messages/fr.json` inside `trades`:
 ```json
 "allInstruments": "Tous les instruments",
 "allStrategies": "Toutes les stratégies",
-"search": "Rechercher dans les notes..."
+"search": "Rechercher dans les notes...",
+"listTitle": "Journal",
+"date": "Date",
+"empty": "Aucun trade pour l'instant."
 ```
 
 Add to `messages/en.json` inside `trades`:
@@ -3168,8 +3175,13 @@ Add to `messages/en.json` inside `trades`:
 ```json
 "allInstruments": "All instruments",
 "allStrategies": "All strategies",
-"search": "Search notes..."
+"search": "Search notes...",
+"listTitle": "Journal",
+"date": "Date",
+"empty": "No trades yet."
 ```
+
+(`instrument` and `direction` already exist in the `trades` namespace from Task 17.)
 
 - [ ] **Step 4: Manually verify**
 
