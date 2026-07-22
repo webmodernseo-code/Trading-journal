@@ -4,5 +4,13 @@
   },
   "home": {
     "scaffolding": "Trading journal — under construction"
+  },
+  "auth": {
+    "registerTitle": "Create an account",
+    "loginTitle": "Log in",
+    "email": "Email",
+    "password": "Password",
+    "registerSubmit": "Create my account",
+    "loginSubmit": "Log in"
   }
 }
