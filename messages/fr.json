@@ -11,6 +11,8 @@
     "email": "Email",
     "password": "Mot de passe",
     "registerSubmit": "Créer mon compte",
-    "loginSubmit": "Se connecter"
+    "loginSubmit": "Se connecter",
+    "invalidCredentials": "Email ou mot de passe incorrect",
+    "emailInUse": "Cet email est déjà utilisé"
   }
 }
