@@ -39,7 +39,48 @@ export const checklistRules = pgTable('checklist_rules', {
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
+export const trades = pgTable('trades', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  instrumentId: uuid('instrument_id').notNull().references(() => instruments.id),
+  strategyId: uuid('strategy_id').references(() => strategies.id),
+  direction: text('direction', { enum: ['long', 'short'] }).notNull(),
+  entryPrice: doublePrecision('entry_price').notNull(),
+  exitPrice: doublePrecision('exit_price'),
+  quantity: doublePrecision('quantity').notNull(),
+  stopLossPrice: doublePrecision('stop_loss_price'),
+  takeProfitPrice: doublePrecision('take_profit_price'),
+  enteredAt: timestamp('entered_at', { withTimezone: true }).notNull(),
+  exitedAt: timestamp('exited_at', { withTimezone: true }),
+  status: text('status', { enum: ['open', 'closed'] }).notNull().default('open'),
+  pnlAmount: doublePrecision('pnl_amount'),
+  pnlOverride: boolean('pnl_override').notNull().default(false),
+  riskAmount: doublePrecision('risk_amount'),
+  notes: text('notes'),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const tradeChecklistResponses = pgTable('trade_checklist_responses', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  tradeId: uuid('trade_id').notNull().references(() => trades.id, { onDelete: 'cascade' }),
+  checklistRuleId: uuid('checklist_rule_id').notNull().references(() => checklistRules.id),
+  checked: boolean('checked').notNull().default(false),
+  phase: text('phase', { enum: ['pre_entry', 'entry', 'management', 'exit'] }),
+});
+
+export const tradeScreenshots = pgTable('trade_screenshots', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  tradeId: uuid('trade_id').notNull().references(() => trades.id, { onDelete: 'cascade' }),
+  url: text('url').notNull(),
+  caption: text('caption'),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
 export type User = typeof users.$inferSelect;
 export type Instrument = typeof instruments.$inferSelect;
 export type Strategy = typeof strategies.$inferSelect;
 export type ChecklistRule = typeof checklistRules.$inferSelect;
+export type Trade = typeof trades.$inferSelect;
+export type TradeChecklistResponse = typeof tradeChecklistResponses.$inferSelect;
+export type TradeScreenshot = typeof tradeScreenshots.$inferSelect;
