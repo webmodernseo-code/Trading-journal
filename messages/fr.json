@@ -88,5 +88,22 @@
     "monthlyLossLimit": "Limite de perte mensuelle",
     "locale": "Langue",
     "save": "Enregistrer"
+  },
+  "nav": {
+    "overview": "Aperçu",
+    "journal": "Journal",
+    "configuration": "Configuration",
+    "tools": "Outils",
+    "dashboard": "Dashboard",
+    "heatmaps": "Heatmaps",
+    "erreurs": "Erreurs",
+    "trades": "Trades",
+    "strategies": "Stratégies",
+    "instruments": "Instruments",
+    "checklist": "Checklist",
+    "calculator": "Calculateur",
+    "today": "Aujourd'hui",
+    "ofDailyLimit": "de la limite journalière",
+    "account": "Compte"
   }
 }

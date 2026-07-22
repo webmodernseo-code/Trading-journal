@@ -88,5 +88,22 @@
     "monthlyLossLimit": "Monthly loss limit",
     "locale": "Language",
     "save": "Save"
+  },
+  "nav": {
+    "overview": "Overview",
+    "journal": "Journal",
+    "configuration": "Configuration",
+    "tools": "Tools",
+    "dashboard": "Dashboard",
+    "heatmaps": "Heatmaps",
+    "erreurs": "Errors",
+    "trades": "Trades",
+    "strategies": "Strategies",
+    "instruments": "Instruments",
+    "checklist": "Checklist",
+    "calculator": "Calculator",
+    "today": "Today",
+    "ofDailyLimit": "of daily limit",
+    "account": "Account"
   }
 }
