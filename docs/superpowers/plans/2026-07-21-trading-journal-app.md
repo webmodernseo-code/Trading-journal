@@ -2885,6 +2885,7 @@ export function ScreenshotUpload({ tradeId }: { tradeId: string }) {
 ```tsx
 import { eq } from 'drizzle-orm';
 import { notFound } from 'next/navigation';
+import { getTranslations } from 'next-intl/server';
 import { db } from '@/db/client';
 import { trades, instruments, strategies, tradeScreenshots, tradeChecklistResponses, checklistRules } from '@/db/schema';
 import { requireUser } from '@/lib/auth-helpers';
@@ -2910,6 +2911,7 @@ export default async function TradeDetailPage({ params }: { params: Promise<{ id
     .where(eq(tradeChecklistResponses.tradeId, trade.id));
 
   const rMultiple = calculateRMultiple(trade.pnlAmount ?? 0, trade.riskAmount);
+  const t = await getTranslations('trades');
 
   return (
     <main className="mx-auto max-w-3xl space-y-6 p-8">
@@ -2917,17 +2919,17 @@ export default async function TradeDetailPage({ params }: { params: Promise<{ id
         {instrument?.name} — {trade.direction} — {trade.status}
       </h1>
       <div className="rounded-xl border border-border-subtle bg-surface p-4 text-text-primary">
-        <p>Prix d'entrée: {trade.entryPrice} — Prix de sortie: {trade.exitPrice ?? '—'}</p>
-        <p>Quantité: {trade.quantity} — Stratégie: {strategy?.name ?? '—'}</p>
+        <p>{t('entryPrice')}: {trade.entryPrice} — {t('exitPrice')}: {trade.exitPrice ?? '—'}</p>
+        <p>{t('quantity')}: {trade.quantity} — {t('strategy')}: {strategy?.name ?? '—'}</p>
         <p className={trade.pnlAmount && trade.pnlAmount >= 0 ? 'text-gain' : 'text-loss'}>
-          P&L: {trade.pnlAmount ?? '—'} {trade.pnlOverride ? '(corrigé manuellement)' : ''}
+          {t('pnl')}: {trade.pnlAmount ?? '—'} {trade.pnlOverride ? t('pnlOverridden') : ''}
         </p>
-        <p>Risque: {trade.riskAmount ?? '—'} — R: {rMultiple !== null ? rMultiple.toFixed(2) : '—'}</p>
+        <p>{t('risk')}: {trade.riskAmount ?? '—'} — {t('rMultiple')}: {rMultiple !== null ? rMultiple.toFixed(2) : '—'}</p>
         {trade.notes && <p className="text-text-muted">{trade.notes}</p>}
       </div>
 
       <div>
-        <h2 className="mb-2 font-bold text-text-primary">Checklist</h2>
+        <h2 className="mb-2 font-bold text-text-primary">{t('checklistTitle')}</h2>
         <ul className="space-y-1">
           {responses.map((r, i) => (
             <li key={i} className="text-text-primary">
@@ -2938,7 +2940,7 @@ export default async function TradeDetailPage({ params }: { params: Promise<{ id
       </div>
 
       <div>
-        <h2 className="mb-2 font-bold text-text-primary">Captures d'écran</h2>
+        <h2 className="mb-2 font-bold text-text-primary">{t('screenshotsTitle')}</h2>
         <div className="mb-3 flex flex-wrap gap-3">
           {screenshots.map((s) => (
             // eslint-disable-next-line @next/next/no-img-element
@@ -2952,6 +2954,8 @@ export default async function TradeDetailPage({ params }: { params: Promise<{ id
 }
 ```
 
+`TradeDetailPage` is an async Server Component, so it must use `getTranslations` from `next-intl/server` (awaited), never the sync `useTranslations` hook — same rule as every async page from Task 13 onward. Every label in this page must go through `t(...)` rather than being hardcoded French — this page has more hardcoded strings than any prior task, so it is easy to miss one; check each `<p>`/`<h2>` line against the translation keys below.
+
 - [ ] **Step 4: Add translation keys**
 
 Add to `messages/fr.json` inside `trades`:
@@ -2959,7 +2963,13 @@ Add to `messages/fr.json` inside `trades`:
 ```json
 "screenshot": "Capture d'écran",
 "caption": "Légende",
-"upload": "Uploader"
+"upload": "Uploader",
+"pnl": "P&L",
+"pnlOverridden": "(corrigé manuellement)",
+"risk": "Risque",
+"rMultiple": "R",
+"checklistTitle": "Checklist",
+"screenshotsTitle": "Captures d'écran"
 ```
 
 Add to `messages/en.json` inside `trades`:
@@ -2967,8 +2977,16 @@ Add to `messages/en.json` inside `trades`:
 ```json
 "screenshot": "Screenshot",
 "caption": "Caption",
-"upload": "Upload"
+"upload": "Upload",
+"pnl": "P&L",
+"pnlOverridden": "(manually adjusted)",
+"risk": "Risk",
+"rMultiple": "R",
+"checklistTitle": "Checklist",
+"screenshotsTitle": "Screenshots"
 ```
+
+(`entryPrice`, `exitPrice`, `quantity`, `strategy` already exist in the `trades` namespace from Task 17.)
 
 - [ ] **Step 5: Set up Vercel Blob token**
 
