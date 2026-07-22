@@ -24,6 +24,15 @@ Trois objectifs à poids égal :
 - Branche `master` — tronc : specs, plan, corrections de plan découvertes en cours d'implémentation
 - Branche `trading-journal-app` — implémentation de l'app (code Next.js), développée dans un git worktree isolé
 
+## Démarrage rapide (cette branche)
+
+```bash
+npm install
+cp .env.local.example .env.local   # renseigner DATABASE_URL, AUTH_SECRET, BLOB_READ_WRITE_TOKEN
+npm run dev                        # http://localhost:3000
+npm test                           # suite Vitest
+```
+
 ## Avancement
 
 Développement suivi via un plan d'implémentation en 25 tâches ([voir le plan](docs/superpowers/plans/2026-07-21-trading-journal-app.md)).
