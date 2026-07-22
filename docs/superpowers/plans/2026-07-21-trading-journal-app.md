@@ -2096,7 +2096,7 @@ export function InstrumentForm() {
 
 ```tsx
 import { eq } from 'drizzle-orm';
-import { useTranslations } from 'next-intl';
+import { getTranslations } from 'next-intl/server';
 import { db } from '@/db/client';
 import { instruments } from '@/db/schema';
 import { requireUser } from '@/lib/auth-helpers';
@@ -2106,6 +2106,7 @@ import { deleteInstrument } from './actions';
 export default async function InstrumentsPage() {
   const user = await requireUser();
   const rows = await db.select().from(instruments).where(eq(instruments.userId, user.id));
+  const t = await getTranslations('instruments');
 
   return (
     <main className="mx-auto max-w-2xl p-8">
@@ -2115,10 +2116,10 @@ export default async function InstrumentsPage() {
         {rows.map((instrument) => (
           <li key={instrument.id} className="flex items-center justify-between rounded-md border border-border-subtle bg-surface p-3">
             <span className="text-text-primary">
-              {instrument.name} — {instrument.assetClass} — point value: {instrument.pointValue}
+              {instrument.name} — {instrument.assetClass} — {t('pointValue').toLowerCase()}: {instrument.pointValue}
             </span>
             <form action={async () => { 'use server'; await deleteInstrument(instrument.id); }}>
-              <button type="submit" className="text-sm text-loss">Supprimer</button>
+              <button type="submit" className="text-sm text-loss">{t('delete')}</button>
             </form>
           </li>
         ))}
@@ -2127,6 +2128,8 @@ export default async function InstrumentsPage() {
   );
 }
 ```
+
+`InstrumentsPage` is an async Server Component, so it must use `getTranslations` from `next-intl/server` (awaited), never the sync `useTranslations` hook — same rule as Task 13's register/login pages. Every row/button string must go through `t(...)` (with a matching key in both message files below) rather than being hardcoded — a hardcoded string here would show the wrong language depending on locale, violating this plan's i18n constraint.
 
 - [ ] **Step 4: Add translation keys**
 
@@ -2137,7 +2140,8 @@ Add to `messages/fr.json`:
   "name": "Nom",
   "assetClass": "Type d'actif",
   "pointValue": "Valeur du point",
-  "add": "Ajouter"
+  "add": "Ajouter",
+  "delete": "Supprimer"
 }
 ```
 
@@ -2148,7 +2152,8 @@ Add to `messages/en.json`:
   "name": "Name",
   "assetClass": "Asset class",
   "pointValue": "Point value",
-  "add": "Add"
+  "add": "Add",
+  "delete": "Delete"
 }
 ```
 
