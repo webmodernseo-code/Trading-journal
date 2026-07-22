@@ -28,5 +28,12 @@
     "description": "Description",
     "add": "Add",
     "delete": "Delete"
+  },
+  "checklist": {
+    "title": "Discipline checklist",
+    "label": "Rule",
+    "add": "Add",
+    "activate": "Activate",
+    "deactivate": "Deactivate"
   }
 }

@@ -28,5 +28,12 @@
     "description": "Description",
     "add": "Ajouter",
     "delete": "Supprimer"
+  },
+  "checklist": {
+    "title": "Checklist de discipline",
+    "label": "Règle",
+    "add": "Ajouter",
+    "activate": "Activer",
+    "deactivate": "Désactiver"
   }
 }
