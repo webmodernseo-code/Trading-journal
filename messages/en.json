@@ -54,6 +54,20 @@
     "phaseManagement": "Management",
     "phaseExit": "Exit",
     "notes": "Notes",
-    "save": "Save"
+    "save": "Save",
+    "allInstruments": "All instruments",
+    "allStrategies": "All strategies",
+    "search": "Search notes...",
+    "listTitle": "Journal",
+    "date": "Date",
+    "empty": "No trades yet.",
+    "screenshot": "Screenshot",
+    "caption": "Caption",
+    "upload": "Upload",
+    "pnl": "P&L",
+    "pnlOverridden": "(manually adjusted)",
+    "risk": "Risk",
+    "rMultiple": "R",
+    "screenshotsTitle": "Screenshots"
   }
 }

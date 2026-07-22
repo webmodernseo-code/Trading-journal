@@ -54,6 +54,20 @@
     "phaseManagement": "Gestion",
     "phaseExit": "Sortie",
     "notes": "Notes",
-    "save": "Enregistrer"
+    "save": "Enregistrer",
+    "allInstruments": "Tous les instruments",
+    "allStrategies": "Toutes les stratégies",
+    "search": "Rechercher dans les notes...",
+    "listTitle": "Journal",
+    "date": "Date",
+    "empty": "Aucun trade pour l'instant.",
+    "screenshot": "Capture d'écran",
+    "caption": "Légende",
+    "upload": "Uploader",
+    "pnl": "P&L",
+    "pnlOverridden": "(corrigé manuellement)",
+    "risk": "Risque",
+    "rMultiple": "R",
+    "screenshotsTitle": "Captures d'écran"
   }
 }
