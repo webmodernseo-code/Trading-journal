@@ -1,12 +1,11 @@
 import { eq, and, isNotNull } from 'drizzle-orm';
+import { getTranslations } from 'next-intl/server';
 import { db } from '@/db/client';
 import { trades, instruments } from '@/db/schema';
 import { requireUser } from '@/lib/auth-helpers';
 import { heatmapBySymbolAndDay, heatmapBySymbolAndDuration, heatmapBySymbolAndMonth } from '@/lib/heatmaps';
 import { HeatmapGrid } from './HeatmapGrid';
 
-const DAY_LABELS = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
-const MONTH_LABELS = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Août', 'Sep', 'Oct', 'Nov', 'Déc'];
 const DURATION_LABELS = ['<30m', '30m-1h', '1h-4h', '4h-1d', '>1d'];
 
 export default async function HeatmapsPage() {
@@ -33,13 +32,16 @@ export default async function HeatmapsPage() {
   const byDay = heatmapBySymbolAndDay(heatmapTrades);
   const byMonth = heatmapBySymbolAndMonth(heatmapTrades);
   const byDuration = heatmapBySymbolAndDuration(heatmapTrades);
+  const t = await getTranslations('heatmaps');
+  const dayLabels = t.raw('days') as string[];
+  const monthLabels = t.raw('months') as string[];
 
   return (
     <main className="mx-auto max-w-4xl space-y-4 p-8">
-      <h1 className="text-xl font-bold text-text-primary">Heatmaps de performance</h1>
-      <HeatmapGrid title="Symbole × Jour" columns={DAY_LABELS.map((_, i) => String(i))} data={byDay} />
-      <HeatmapGrid title="Symbole × Durée" columns={DURATION_LABELS} data={byDuration} />
-      <HeatmapGrid title="Symbole × Mois" columns={MONTH_LABELS.map((_, i) => String(i + 1))} data={byMonth} />
+      <h1 className="text-xl font-bold text-text-primary">{t('title')}</h1>
+      <HeatmapGrid title={t('bySymbolDay')} columns={dayLabels.map((_, i) => String(i))} data={byDay} />
+      <HeatmapGrid title={t('bySymbolDuration')} columns={DURATION_LABELS} data={byDuration} />
+      <HeatmapGrid title={t('bySymbolMonth')} columns={monthLabels.map((_, i) => String(i + 1))} data={byMonth} />
     </main>
   );
 }

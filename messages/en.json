@@ -6,6 +6,7 @@
     "scaffolding": "Trading journal — under construction"
   },
   "calculator": {
+    "pageTitle": "Position size calculator",
     "accountBalance": "Account balance",
     "riskPercent": "Risk %",
     "instrument": "Instrument",
@@ -105,5 +106,34 @@
     "today": "Today",
     "ofDailyLimit": "of daily limit",
     "account": "Account"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "winRate": "Win rate",
+    "profitFactor": "Profit factor",
+    "expectancy": "Expectancy (R)",
+    "currentStreak": "Current streak",
+    "dailyLoss": "Daily loss",
+    "weeklyLoss": "Weekly loss",
+    "monthlyLoss": "Monthly loss"
+  },
+  "heatmaps": {
+    "title": "Performance heatmaps",
+    "bySymbolDay": "Symbol × Day",
+    "bySymbolDuration": "Symbol × Duration",
+    "bySymbolMonth": "Symbol × Month",
+    "days": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+    "months": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+  },
+  "erreurs": {
+    "title": "Errors",
+    "totalErrors": "Total errors",
+    "categories": "Categories",
+    "tradesWithErrors": "Trades with errors",
+    "totalTrades": "Total trades",
+    "byCategory": "By category",
+    "empty": "No errors recorded yet.",
+    "byPhase": "By trade phase",
+    "category": "Category"
   }
 }

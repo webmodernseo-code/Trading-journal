@@ -1,4 +1,5 @@
 import { eq, and, isNotNull } from 'drizzle-orm';
+import { getTranslations } from 'next-intl/server';
 import { db } from '@/db/client';
 import { trades } from '@/db/schema';
 import { requireUser } from '@/lib/auth-helpers';
@@ -32,26 +33,27 @@ export default async function DashboardPage() {
   const weeklyStatus = calculateWeeklyLossStatus(statTrades, user.weeklyLossLimit, now);
   const monthlyStatus = calculateMonthlyLossStatus(statTrades, user.monthlyLossLimit, now);
   const streaks = calculateStreaks(statTrades);
+  const t = await getTranslations('dashboard');
 
   return (
     <main className="mx-auto max-w-4xl space-y-6 p-8">
-      <h1 className="text-xl font-bold text-text-primary">Dashboard</h1>
+      <h1 className="text-xl font-bold text-text-primary">{t('title')}</h1>
 
       <div className="grid grid-cols-4 gap-3">
-        <StatCard label="Win rate" value={`${winRate.toFixed(0)}%`} />
-        <StatCard label="Profit factor" value={profitFactor !== null ? profitFactor.toFixed(2) : '—'} />
-        <StatCard label="Espérance (R)" value={expectancy !== null ? expectancy.toFixed(2) : '—'} />
+        <StatCard label={t('winRate')} value={`${winRate.toFixed(0)}%`} />
+        <StatCard label={t('profitFactor')} value={profitFactor !== null ? profitFactor.toFixed(2) : '—'} />
+        <StatCard label={t('expectancy')} value={expectancy !== null ? expectancy.toFixed(2) : '—'} />
         <StatCard
-          label="Streak actuelle"
+          label={t('currentStreak')}
           value={String(streaks.currentStreak)}
           valueClassName={streaks.currentStreak >= 0 ? 'text-gain' : 'text-loss'}
         />
       </div>
 
       <div className="grid grid-cols-3 gap-3">
-        <LossLimitBar label="Perte journalière" status={dailyStatus} />
-        <LossLimitBar label="Perte hebdomadaire" status={weeklyStatus} />
-        <LossLimitBar label="Perte mensuelle" status={monthlyStatus} />
+        <LossLimitBar label={t('dailyLoss')} status={dailyStatus} />
+        <LossLimitBar label={t('weeklyLoss')} status={weeklyStatus} />
+        <LossLimitBar label={t('monthlyLoss')} status={monthlyStatus} />
       </div>
 
       <EquityCurveChart

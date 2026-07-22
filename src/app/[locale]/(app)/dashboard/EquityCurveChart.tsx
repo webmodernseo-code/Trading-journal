@@ -7,10 +7,10 @@ export function EquityCurveChart({ data }: { data: { date: string; cumulativePnl
     <div className="h-40 rounded-xl border border-border-subtle bg-surface p-4">
       <ResponsiveContainer width="100%" height="100%">
         <LineChart data={data}>
-          <XAxis dataKey="date" stroke="#9ca3af" fontSize={11} />
-          <YAxis stroke="#9ca3af" fontSize={11} />
-          <Tooltip contentStyle={{ background: '#12151a', border: '1px solid rgba(255,255,255,0.1)' }} />
-          <Line type="monotone" dataKey="cumulativePnl" stroke="#10b981" strokeWidth={2} dot={false} />
+          <XAxis dataKey="date" stroke="var(--color-muted)" fontSize={11} />
+          <YAxis stroke="var(--color-muted)" fontSize={11} />
+          <Tooltip contentStyle={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)' }} />
+          <Line type="monotone" dataKey="cumulativePnl" stroke="var(--color-accent)" strokeWidth={2} dot={false} />
         </LineChart>
       </ResponsiveContainer>
     </div>

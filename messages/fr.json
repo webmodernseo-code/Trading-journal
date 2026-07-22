@@ -6,6 +6,7 @@
     "scaffolding": "Journal de trading — en construction"
   },
   "calculator": {
+    "pageTitle": "Calculateur de taille de position",
     "accountBalance": "Solde du compte",
     "riskPercent": "% de risque",
     "instrument": "Instrument",
@@ -105,5 +106,34 @@
     "today": "Aujourd'hui",
     "ofDailyLimit": "de la limite journalière",
     "account": "Compte"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "winRate": "Win rate",
+    "profitFactor": "Profit factor",
+    "expectancy": "Espérance (R)",
+    "currentStreak": "Streak actuelle",
+    "dailyLoss": "Perte journalière",
+    "weeklyLoss": "Perte hebdomadaire",
+    "monthlyLoss": "Perte mensuelle"
+  },
+  "heatmaps": {
+    "title": "Heatmaps de performance",
+    "bySymbolDay": "Symbole × Jour",
+    "bySymbolDuration": "Symbole × Durée",
+    "bySymbolMonth": "Symbole × Mois",
+    "days": ["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"],
+    "months": ["Jan", "Fév", "Mar", "Avr", "Mai", "Juin", "Juil", "Août", "Sep", "Oct", "Nov", "Déc"]
+  },
+  "erreurs": {
+    "title": "Erreurs",
+    "totalErrors": "Erreurs totales",
+    "categories": "Catégories",
+    "tradesWithErrors": "Trades avec erreurs",
+    "totalTrades": "Total trades",
+    "byCategory": "Par catégorie",
+    "empty": "Aucune erreur enregistrée pour l'instant.",
+    "byPhase": "Par phase du trade",
+    "category": "Catégorie"
   }
 }

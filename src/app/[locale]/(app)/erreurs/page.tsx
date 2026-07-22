@@ -1,4 +1,5 @@
 import { eq } from 'drizzle-orm';
+import { getTranslations } from 'next-intl/server';
 import { db } from '@/db/client';
 import { trades, tradeChecklistResponses, checklistRules } from '@/db/schema';
 import { requireUser } from '@/lib/auth-helpers';
@@ -26,33 +27,35 @@ export default async function ErreursPage() {
   );
 
   const analytics = calculateErrorsAnalytics(tradesWithResponses);
+  const t = await getTranslations('erreurs');
+  const tPhase = await getTranslations('trades');
   const phaseLabels: Record<ChecklistPhase, string> = {
-    pre_entry: 'Pré-entrée',
-    entry: 'Entrée',
-    management: 'Gestion',
-    exit: 'Sortie',
+    pre_entry: tPhase('phasePreEntry'),
+    entry: tPhase('phaseEntry'),
+    management: tPhase('phaseManagement'),
+    exit: tPhase('phaseExit'),
   };
 
   return (
     <main className="mx-auto max-w-3xl space-y-6 p-8">
-      <h1 className="text-xl font-bold text-text-primary">Erreurs</h1>
+      <h1 className="text-xl font-bold text-text-primary">{t('title')}</h1>
 
       <div className="grid grid-cols-4 gap-3">
-        <StatCard label="Erreurs totales" value={String(analytics.totalErrors)} />
-        <StatCard label="Catégories" value={String(analytics.byCategory.length)} />
+        <StatCard label={t('totalErrors')} value={String(analytics.totalErrors)} />
+        <StatCard label={t('categories')} value={String(analytics.byCategory.length)} />
         <StatCard
-          label="Trades avec erreurs"
+          label={t('tradesWithErrors')}
           value={
             analytics.totalTrades > 0
               ? `${((analytics.totalTradesWithErrors / analytics.totalTrades) * 100).toFixed(0)}%`
               : '—'
           }
         />
-        <StatCard label="Total trades" value={String(analytics.totalTrades)} />
+        <StatCard label={t('totalTrades')} value={String(analytics.totalTrades)} />
       </div>
 
       <div className="rounded-xl border border-border-subtle bg-surface p-4">
-        <h2 className="mb-3 font-bold text-text-primary">Par catégorie</h2>
+        <h2 className="mb-3 font-bold text-text-primary">{t('byCategory')}</h2>
         <ul className="space-y-1">
           {analytics.byCategory
             .sort((a, b) => b.count - a.count)
@@ -62,16 +65,16 @@ export default async function ErreursPage() {
                 <span>{c.count}</span>
               </li>
             ))}
-          {analytics.byCategory.length === 0 && <p className="text-text-muted">Aucune erreur enregistrée pour l'instant.</p>}
+          {analytics.byCategory.length === 0 && <p className="text-text-muted">{t('empty')}</p>}
         </ul>
       </div>
 
       <div className="rounded-xl border border-border-subtle bg-surface p-4">
-        <h2 className="mb-3 font-bold text-text-primary">Par phase du trade</h2>
+        <h2 className="mb-3 font-bold text-text-primary">{t('byPhase')}</h2>
         <table className="w-full text-sm text-text-primary">
           <thead className="text-text-muted">
             <tr>
-              <th className="p-1 text-left">Catégorie</th>
+              <th className="p-1 text-left">{t('category')}</th>
               {(['pre_entry', 'entry', 'management', 'exit'] as ChecklistPhase[]).map((phase) => (
                 <th key={phase} className="p-1">{phaseLabels[phase]}</th>
               ))}
