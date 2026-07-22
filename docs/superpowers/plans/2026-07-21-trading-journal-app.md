@@ -2253,6 +2253,7 @@ export function StrategyForm() {
 
 ```tsx
 import { eq } from 'drizzle-orm';
+import { getTranslations } from 'next-intl/server';
 import { db } from '@/db/client';
 import { strategies } from '@/db/schema';
 import { requireUser } from '@/lib/auth-helpers';
@@ -2262,17 +2263,18 @@ import { deleteStrategy } from './actions';
 export default async function StrategiesPage() {
   const user = await requireUser();
   const rows = await db.select().from(strategies).where(eq(strategies.userId, user.id));
+  const t = await getTranslations('strategies');
 
   return (
     <main className="mx-auto max-w-2xl p-8">
-      <h1 className="mb-4 text-xl font-bold text-text-primary">Stratégies</h1>
+      <h1 className="mb-4 text-xl font-bold text-text-primary">{t('title')}</h1>
       <StrategyForm />
       <ul className="mt-4 space-y-2">
         {rows.map((strategy) => (
           <li key={strategy.id} className="flex items-center justify-between rounded-md border border-border-subtle bg-surface p-3">
             <span className="text-text-primary">{strategy.name}{strategy.description ? ` — ${strategy.description}` : ''}</span>
             <form action={async () => { 'use server'; await deleteStrategy(strategy.id); }}>
-              <button type="submit" className="text-sm text-loss">Supprimer</button>
+              <button type="submit" className="text-sm text-loss">{t('delete')}</button>
             </form>
           </li>
         ))}
@@ -2282,15 +2284,19 @@ export default async function StrategiesPage() {
 }
 ```
 
+`StrategiesPage` is an async Server Component, so it must use `getTranslations` from `next-intl/server` (awaited), never the sync `useTranslations` hook (same rule as Task 13/14). The heading and delete-button text must go through `t(...)` rather than being hardcoded — "Stratégies" is not the same word as "Strategies", so hardcoding it would show French to English-locale users.
+
 - [ ] **Step 4: Add translation keys**
 
 Add to `messages/fr.json`:
 
 ```json
 "strategies": {
+  "title": "Stratégies",
   "name": "Nom",
   "description": "Description",
-  "add": "Ajouter"
+  "add": "Ajouter",
+  "delete": "Supprimer"
 }
 ```
 
@@ -2298,9 +2304,11 @@ Add to `messages/en.json`:
 
 ```json
 "strategies": {
+  "title": "Strategies",
   "name": "Name",
   "description": "Description",
-  "add": "Add"
+  "add": "Add",
+  "delete": "Delete"
 }
 ```
 
@@ -2400,6 +2408,7 @@ export function ChecklistForm() {
 
 ```tsx
 import { eq, asc } from 'drizzle-orm';
+import { getTranslations } from 'next-intl/server';
 import { db } from '@/db/client';
 import { checklistRules } from '@/db/schema';
 import { requireUser } from '@/lib/auth-helpers';
@@ -2413,10 +2422,11 @@ export default async function ChecklistPage() {
     .from(checklistRules)
     .where(eq(checklistRules.userId, user.id))
     .orderBy(asc(checklistRules.displayOrder));
+  const t = await getTranslations('checklist');
 
   return (
     <main className="mx-auto max-w-2xl p-8">
-      <h1 className="mb-4 text-xl font-bold text-text-primary">Checklist de discipline</h1>
+      <h1 className="mb-4 text-xl font-bold text-text-primary">{t('title')}</h1>
       <ChecklistForm />
       <ul className="mt-4 space-y-2">
         {rows.map((rule) => (
@@ -2424,7 +2434,7 @@ export default async function ChecklistPage() {
             <span className={rule.active ? 'text-text-primary' : 'text-text-muted line-through'}>{rule.label}</span>
             <form action={async () => { 'use server'; await toggleChecklistRuleActive(rule.id, !rule.active); }}>
               <button type="submit" className="text-sm text-accent">
-                {rule.active ? 'Désactiver' : 'Activer'}
+                {rule.active ? t('deactivate') : t('activate')}
               </button>
             </form>
           </li>
@@ -2435,14 +2445,19 @@ export default async function ChecklistPage() {
 }
 ```
 
+`ChecklistPage` is an async Server Component, so it must use `getTranslations` from `next-intl/server` (awaited), never the sync `useTranslations` hook (same rule as Task 13/14/15). The heading and toggle-button text must go through `t(...)` rather than being hardcoded French.
+
 - [ ] **Step 4: Add translation keys**
 
 Add to `messages/fr.json`:
 
 ```json
 "checklist": {
+  "title": "Checklist de discipline",
   "label": "Règle",
-  "add": "Ajouter"
+  "add": "Ajouter",
+  "activate": "Activer",
+  "deactivate": "Désactiver"
 }
 ```
 
@@ -2450,8 +2465,11 @@ Add to `messages/en.json`:
 
 ```json
 "checklist": {
+  "title": "Discipline checklist",
   "label": "Rule",
-  "add": "Add"
+  "add": "Add",
+  "activate": "Activate",
+  "deactivate": "Deactivate"
 }
 ```
 
