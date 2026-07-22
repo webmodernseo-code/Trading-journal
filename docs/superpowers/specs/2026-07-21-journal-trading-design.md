@@ -48,7 +48,7 @@ Toutes les tables ci-dessous (sauf `users`) sont scopées par `user_id`.
 **strategies** (CRUD géré par l'utilisateur)
 - id, user_id, name, description (optionnelle), created_at
 
-**checklist_rules** (CRUD géré par l'utilisateur, pré-rempli avec un jeu de règles courantes à la création du compte, ex: "Plan respecté", "Pas de revenge trading", "Taille de position correcte", "Stop loss placé avant l'entrée")
+**checklist_rules** (CRUD géré par l'utilisateur, pré-rempli avec un jeu d'erreurs courantes à la création du compte, cochées quand l'erreur s'est produite sur le trade — ex: "Plan non respecté", "Revenge trading", "Taille de position incorrecte", "Stop loss absent")
 - id, user_id, label, active (bool — permet de retirer une règle sans casser l'historique), display_order, created_at
 
 **trades**
