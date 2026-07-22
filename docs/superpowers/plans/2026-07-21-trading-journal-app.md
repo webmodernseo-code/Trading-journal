@@ -367,7 +367,14 @@ Manual step (no code): create a project at neon.tech, copy the pooled connection
 
 ```typescript
 import { defineConfig } from 'drizzle-kit';
-import 'dotenv/config';
+import dotenv from 'dotenv';
+import path from 'path';
+
+// Explicit path: the project's env vars live in .env.local (Next.js
+// convention, per Task 1's .env.local.example), and dotenv's bare
+// 'dotenv/config' import only auto-loads a plain .env file, which this
+// project never creates — so DATABASE_URL would silently be undefined here.
+dotenv.config({ path: path.resolve('.env.local') });
 
 export default defineConfig({
   schema: './src/db/schema.ts',
