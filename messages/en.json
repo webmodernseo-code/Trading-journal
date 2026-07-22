@@ -78,5 +78,15 @@
     "risk": "Risk",
     "rMultiple": "R",
     "screenshotsTitle": "Screenshots"
+  },
+  "settings": {
+    "title": "Settings",
+    "accountBalance": "Account balance",
+    "defaultRiskPercent": "Default risk %",
+    "dailyLossLimit": "Daily loss limit",
+    "weeklyLossLimit": "Weekly loss limit",
+    "monthlyLossLimit": "Monthly loss limit",
+    "locale": "Language",
+    "save": "Save"
   }
 }

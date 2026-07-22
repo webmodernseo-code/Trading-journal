@@ -78,5 +78,15 @@
     "risk": "Risque",
     "rMultiple": "R",
     "screenshotsTitle": "Captures d'écran"
+  },
+  "settings": {
+    "title": "Paramètres",
+    "accountBalance": "Solde du compte",
+    "defaultRiskPercent": "% de risque par défaut",
+    "dailyLossLimit": "Limite de perte journalière",
+    "weeklyLossLimit": "Limite de perte hebdomadaire",
+    "monthlyLossLimit": "Limite de perte mensuelle",
+    "locale": "Langue",
+    "save": "Enregistrer"
   }
 }
