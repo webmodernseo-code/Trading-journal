@@ -19,6 +19,7 @@
     "name": "Name",
     "assetClass": "Asset class",
     "pointValue": "Point value",
-    "add": "Add"
+    "add": "Add",
+    "delete": "Delete"
   }
 }

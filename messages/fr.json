@@ -19,6 +19,7 @@
     "name": "Nom",
     "assetClass": "Type d'actif",
     "pointValue": "Valeur du point",
-    "add": "Ajouter"
+    "add": "Ajouter",
+    "delete": "Supprimer"
   }
 }

@@ -1,4 +1,5 @@
 import { eq } from 'drizzle-orm';
+import { getTranslations } from 'next-intl/server';
 import { db } from '@/db/client';
 import { instruments } from '@/db/schema';
 import { requireUser } from '@/lib/auth-helpers';
@@ -8,6 +9,7 @@ import { deleteInstrument } from './actions';
 export default async function InstrumentsPage() {
   const user = await requireUser();
   const rows = await db.select().from(instruments).where(eq(instruments.userId, user.id));
+  const t = await getTranslations('instruments');
 
   return (
     <main className="mx-auto max-w-2xl p-8">
@@ -17,10 +19,10 @@ export default async function InstrumentsPage() {
         {rows.map((instrument) => (
           <li key={instrument.id} className="flex items-center justify-between rounded-md border border-border-subtle bg-surface p-3">
             <span className="text-text-primary">
-              {instrument.name} — {instrument.assetClass} — point value: {instrument.pointValue}
+              {instrument.name} — {instrument.assetClass} — {t('pointValue').toLowerCase()}: {instrument.pointValue}
             </span>
             <form action={async () => { 'use server'; await deleteInstrument(instrument.id); }}>
-              <button type="submit" className="text-sm text-loss">Supprimer</button>
+              <button type="submit" className="text-sm text-loss">{t('delete')}</button>
             </form>
           </li>
         ))}
