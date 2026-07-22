@@ -35,5 +35,25 @@
     "add": "Add",
     "activate": "Activate",
     "deactivate": "Deactivate"
+  },
+  "trades": {
+    "newTitle": "New trade",
+    "instrument": "Instrument",
+    "strategy": "Strategy",
+    "direction": "Direction",
+    "quantity": "Quantity",
+    "entryPrice": "Entry price",
+    "exitPrice": "Exit price",
+    "stopLoss": "Stop loss",
+    "takeProfit": "Take profit",
+    "enteredAt": "Entry date",
+    "exitedAt": "Exit date",
+    "checklistTitle": "Discipline checklist",
+    "phasePreEntry": "Pre-entry",
+    "phaseEntry": "Entry",
+    "phaseManagement": "Management",
+    "phaseExit": "Exit",
+    "notes": "Notes",
+    "save": "Save"
   }
 }
