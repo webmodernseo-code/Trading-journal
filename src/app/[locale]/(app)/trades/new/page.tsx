@@ -17,7 +17,12 @@ export default async function NewTradePage() {
   return (
     <main className="mx-auto max-w-3xl p-8">
       <h1 className="mb-4 text-xl font-bold text-text-primary">{t('newTitle')}</h1>
-      <TradeForm instruments={instrumentRows} strategies={strategyRows} checklistRules={checklistRows} />
+      <TradeForm
+        instruments={instrumentRows}
+        strategies={strategyRows}
+        checklistRules={checklistRows}
+        defaultAccountBalance={user.accountBalance}
+      />
     </main>
   );
 }

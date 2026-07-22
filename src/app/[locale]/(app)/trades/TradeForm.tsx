@@ -1,22 +1,33 @@
 'use client';
 
+import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import type { Instrument, Strategy, ChecklistRule } from '@/db/schema';
 import { createTrade } from './actions';
+import { Calculator } from '../tools/position-size-calculator/Calculator';
 
 export function TradeForm({
   instruments,
   strategies,
   checklistRules,
+  defaultAccountBalance,
 }: {
   instruments: Instrument[];
   strategies: Strategy[];
   checklistRules: ChecklistRule[];
+  defaultAccountBalance: number;
 }) {
   const t = useTranslations('trades');
+  const [quantity, setQuantity] = useState<number | ''>('');
 
   return (
     <form action={createTrade} className="space-y-4 rounded-xl border border-border-subtle bg-surface p-6">
+      <Calculator
+        instruments={instruments}
+        defaultAccountBalance={defaultAccountBalance}
+        onCalculated={(q) => setQuantity(Number(q.toFixed(4)))}
+      />
+
       <div className="grid grid-cols-2 gap-4">
         <label className="text-sm text-text-muted">
           {t('instrument')}
@@ -44,7 +55,15 @@ export function TradeForm({
         </label>
         <label className="text-sm text-text-muted">
           {t('quantity')}
-          <input name="quantity" type="number" step="any" required className="mt-1 block w-full rounded-md bg-bg p-2 text-text-primary" />
+          <input
+            name="quantity"
+            type="number"
+            step="any"
+            required
+            value={quantity}
+            onChange={(e) => setQuantity(e.target.value === '' ? '' : Number(e.target.value))}
+            className="mt-1 block w-full rounded-md bg-bg p-2 text-text-primary"
+          />
         </label>
         <label className="text-sm text-text-muted">
           {t('entryPrice')}

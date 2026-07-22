@@ -5,6 +5,15 @@
   "home": {
     "scaffolding": "Journal de trading — en construction"
   },
+  "calculator": {
+    "accountBalance": "Solde du compte",
+    "riskPercent": "% de risque",
+    "instrument": "Instrument",
+    "stopDistance": "Distance du stop (en prix)",
+    "calculate": "Calculer",
+    "result": "Quantité suggérée",
+    "noInstrument": "Sélectionne un instrument"
+  },
   "auth": {
     "registerTitle": "Créer un compte",
     "loginTitle": "Se connecter",

@@ -5,6 +5,15 @@
   "home": {
     "scaffolding": "Trading journal — under construction"
   },
+  "calculator": {
+    "accountBalance": "Account balance",
+    "riskPercent": "Risk %",
+    "instrument": "Instrument",
+    "stopDistance": "Stop distance (in price)",
+    "calculate": "Calculate",
+    "result": "Suggested quantity",
+    "noInstrument": "Select an instrument"
+  },
   "auth": {
     "registerTitle": "Create an account",
     "loginTitle": "Log in",
