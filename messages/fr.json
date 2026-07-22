@@ -26,6 +26,7 @@
     "emailInUse": "Cet email est déjà utilisé"
   },
   "instruments": {
+    "title": "Instruments",
     "name": "Nom",
     "assetClass": "Type d'actif",
     "pointValue": "Valeur du point",

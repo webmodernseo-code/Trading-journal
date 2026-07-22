@@ -26,6 +26,7 @@
     "emailInUse": "This email is already in use"
   },
   "instruments": {
+    "title": "Instruments",
     "name": "Name",
     "assetClass": "Asset class",
     "pointValue": "Point value",

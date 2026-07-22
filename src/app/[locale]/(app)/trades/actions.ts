@@ -1,9 +1,9 @@
 'use server';
 
 import { redirect } from 'next/navigation';
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 import { db } from '@/db/client';
-import { trades, instruments, tradeChecklistResponses, checklistRules } from '@/db/schema';
+import { trades, instruments, strategies, tradeChecklistResponses, checklistRules } from '@/db/schema';
 import { requireUser } from '@/lib/auth-helpers';
 import { calculatePnl, calculateRisk } from '@/lib/calculations';
 
@@ -11,7 +11,11 @@ export async function createTrade(formData: FormData) {
   const user = await requireUser();
 
   const instrumentId = String(formData.get('instrumentId'));
-  const [instrument] = await db.select().from(instruments).where(eq(instruments.id, instrumentId)).limit(1);
+  const [instrument] = await db
+    .select()
+    .from(instruments)
+    .where(and(eq(instruments.id, instrumentId), eq(instruments.userId, user.id)))
+    .limit(1);
   if (!instrument) throw new Error('Instrument introuvable');
 
   const direction = String(formData.get('direction')) as 'long' | 'short';
@@ -24,7 +28,16 @@ export async function createTrade(formData: FormData) {
   const takeProfitRaw = formData.get('takeProfitPrice');
   const takeProfitPrice = takeProfitRaw ? Number(takeProfitRaw) : null;
   const strategyIdRaw = formData.get('strategyId');
-  const strategyId = strategyIdRaw ? String(strategyIdRaw) : null;
+  let strategyId: string | null = null;
+  if (strategyIdRaw) {
+    const [strategy] = await db
+      .select({ id: strategies.id })
+      .from(strategies)
+      .where(and(eq(strategies.id, String(strategyIdRaw)), eq(strategies.userId, user.id)))
+      .limit(1);
+    if (!strategy) throw new Error('Stratégie introuvable');
+    strategyId = strategy.id;
+  }
   const enteredAt = new Date(String(formData.get('enteredAt')));
   const exitedAtRaw = formData.get('exitedAt');
   const exitedAt = exitedAtRaw ? new Date(String(exitedAtRaw)) : null;

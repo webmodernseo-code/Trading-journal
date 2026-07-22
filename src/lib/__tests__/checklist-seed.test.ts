@@ -2,12 +2,12 @@ import { describe, it, expect } from 'vitest';
 import { DEFAULT_CHECKLIST_RULES } from '../checklist-seed';
 
 describe('DEFAULT_CHECKLIST_RULES', () => {
-  it('contains the four rules from the spec', () => {
+  it('contains four error/violation-phrased rules matching the errors-analytics polarity (checked = mistake happened)', () => {
     expect(DEFAULT_CHECKLIST_RULES).toEqual([
-      'Plan respecté',
-      'Pas de revenge trading',
-      'Taille de position correcte',
-      'Stop loss placé avant l\'entrée',
+      'Plan non respecté',
+      'Revenge trading',
+      'Taille de position incorrecte',
+      'Stop loss absent',
     ]);
   });
 });

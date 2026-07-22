@@ -13,7 +13,7 @@ export default async function InstrumentsPage() {
 
   return (
     <main className="mx-auto max-w-2xl p-8">
-      <h1 className="mb-4 text-xl font-bold text-text-primary">Instruments</h1>
+      <h1 className="mb-4 text-xl font-bold text-text-primary">{t('title')}</h1>
       <InstrumentForm />
       <ul className="mt-4 space-y-2">
         {rows.map((instrument) => (

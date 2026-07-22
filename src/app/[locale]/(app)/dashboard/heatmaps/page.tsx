@@ -35,13 +35,16 @@ export default async function HeatmapsPage() {
   const t = await getTranslations('heatmaps');
   const dayLabels = t.raw('days') as string[];
   const monthLabels = t.raw('months') as string[];
+  const dayColumns = dayLabels.map((label, i) => ({ key: String(i), label }));
+  const durationColumns = DURATION_LABELS.map((label) => ({ key: label, label }));
+  const monthColumns = monthLabels.map((label, i) => ({ key: String(i + 1), label }));
 
   return (
     <main className="mx-auto max-w-4xl space-y-4 p-8">
       <h1 className="text-xl font-bold text-text-primary">{t('title')}</h1>
-      <HeatmapGrid title={t('bySymbolDay')} columns={dayLabels.map((_, i) => String(i))} data={byDay} />
-      <HeatmapGrid title={t('bySymbolDuration')} columns={DURATION_LABELS} data={byDuration} />
-      <HeatmapGrid title={t('bySymbolMonth')} columns={monthLabels.map((_, i) => String(i + 1))} data={byMonth} />
+      <HeatmapGrid title={t('bySymbolDay')} columns={dayColumns} data={byDay} />
+      <HeatmapGrid title={t('bySymbolDuration')} columns={durationColumns} data={byDuration} />
+      <HeatmapGrid title={t('bySymbolMonth')} columns={monthColumns} data={byMonth} />
     </main>
   );
 }

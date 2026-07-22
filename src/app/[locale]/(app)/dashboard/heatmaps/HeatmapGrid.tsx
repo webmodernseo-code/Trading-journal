@@ -4,7 +4,7 @@ export function HeatmapGrid({
   data,
 }: {
   title: string;
-  columns: string[];
+  columns: { key: string; label: string }[];
   data: Record<string, Record<string, number>>;
 }) {
   const instrumentNames = Object.keys(data);
@@ -17,7 +17,7 @@ export function HeatmapGrid({
           <tr>
             <th className="p-1 text-left text-text-muted"></th>
             {columns.map((c) => (
-              <th key={c} className="p-1 text-text-muted">{c}</th>
+              <th key={c.key} className="p-1 text-text-muted">{c.label}</th>
             ))}
           </tr>
         </thead>
@@ -25,11 +25,11 @@ export function HeatmapGrid({
           {instrumentNames.map((name) => (
             <tr key={name}>
               <td className="p-1 text-text-muted">{name}</td>
-              {columns.map((_, colIndex) => {
-                const value = data[name][String(colIndex)] ?? data[name][columns[colIndex]];
+              {columns.map((c) => {
+                const value = data[name][c.key];
                 return (
                   <td
-                    key={colIndex}
+                    key={c.key}
                     className={`p-1 text-center ${value === undefined ? '' : value >= 0 ? 'bg-gain/20 text-gain' : 'bg-loss/20 text-loss'}`}
                   >
                     {value !== undefined ? value.toFixed(1) : ''}
