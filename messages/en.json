@@ -21,5 +21,12 @@
     "pointValue": "Point value",
     "add": "Add",
     "delete": "Delete"
+  },
+  "strategies": {
+    "title": "Strategies",
+    "name": "Name",
+    "description": "Description",
+    "add": "Add",
+    "delete": "Delete"
   }
 }
