@@ -1724,12 +1724,12 @@ import { describe, it, expect } from 'vitest';
 import { DEFAULT_CHECKLIST_RULES } from '../checklist-seed';
 
 describe('DEFAULT_CHECKLIST_RULES', () => {
-  it('contains the four rules from the spec', () => {
+  it('contains four error/violation-phrased rules matching the errors-analytics polarity (checked = mistake happened)', () => {
     expect(DEFAULT_CHECKLIST_RULES).toEqual([
-      'Plan respecté',
-      'Pas de revenge trading',
-      'Taille de position correcte',
-      'Stop loss placé avant l\'entrée',
+      'Plan non respecté',
+      'Revenge trading',
+      'Taille de position incorrecte',
+      'Stop loss absent',
     ]);
   });
 });
@@ -1743,11 +1743,14 @@ Expected: FAIL — `Cannot find module '../checklist-seed'`.
 - [ ] **Step 3: Implement `src/lib/checklist-seed.ts`**
 
 ```typescript
+// Phrased as errors/violations, not good practices: the errors-analytics
+// page (Task 11/23) counts a *checked* response as "this mistake happened
+// on this trade", so the default rules must match that polarity.
 export const DEFAULT_CHECKLIST_RULES = [
-  'Plan respecté',
-  'Pas de revenge trading',
-  'Taille de position correcte',
-  "Stop loss placé avant l'entrée",
+  'Plan non respecté',
+  'Revenge trading',
+  'Taille de position incorrecte',
+  'Stop loss absent',
 ];
 ```
 
