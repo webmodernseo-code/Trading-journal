@@ -2695,6 +2695,7 @@ export function TradeForm({
 
 ```tsx
 import { eq } from 'drizzle-orm';
+import { getTranslations } from 'next-intl/server';
 import { db } from '@/db/client';
 import { instruments, strategies, checklistRules } from '@/db/schema';
 import { requireUser } from '@/lib/auth-helpers';
@@ -2707,15 +2708,18 @@ export default async function NewTradePage() {
     db.select().from(strategies).where(eq(strategies.userId, user.id)),
     db.select().from(checklistRules).where(eq(checklistRules.userId, user.id)),
   ]);
+  const t = await getTranslations('trades');
 
   return (
     <main className="mx-auto max-w-3xl p-8">
-      <h1 className="mb-4 text-xl font-bold text-text-primary">Nouveau trade</h1>
+      <h1 className="mb-4 text-xl font-bold text-text-primary">{t('newTitle')}</h1>
       <TradeForm instruments={instrumentRows} strategies={strategyRows} checklistRules={checklistRows} />
     </main>
   );
 }
 ```
+
+`NewTradePage` is an async Server Component, so it must use `getTranslations` from `next-intl/server` (awaited), never the sync `useTranslations` hook — same rule as every async page from Task 13 onward. The heading must go through `t(...)` rather than being hardcoded French.
 
 - [ ] **Step 4: Add translation keys**
 
@@ -2723,6 +2727,7 @@ Add to `messages/fr.json`:
 
 ```json
 "trades": {
+  "newTitle": "Nouveau trade",
   "instrument": "Instrument",
   "strategy": "Stratégie",
   "direction": "Sens",
@@ -2747,6 +2752,7 @@ Add to `messages/en.json`:
 
 ```json
 "trades": {
+  "newTitle": "New trade",
   "instrument": "Instrument",
   "strategy": "Strategy",
   "direction": "Direction",
