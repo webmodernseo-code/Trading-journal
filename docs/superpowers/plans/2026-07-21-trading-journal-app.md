@@ -3316,6 +3316,7 @@ export function Calculator({
 
 ```tsx
 import { eq } from 'drizzle-orm';
+import { getTranslations } from 'next-intl/server';
 import { db } from '@/db/client';
 import { instruments } from '@/db/schema';
 import { requireUser } from '@/lib/auth-helpers';
@@ -3324,15 +3325,18 @@ import { Calculator } from './Calculator';
 export default async function PositionSizeCalculatorPage() {
   const user = await requireUser();
   const instrumentRows = await db.select().from(instruments).where(eq(instruments.userId, user.id));
+  const t = await getTranslations('calculator');
 
   return (
     <main className="mx-auto max-w-md p-8">
-      <h1 className="mb-4 text-xl font-bold text-text-primary">Calculateur de taille de position</h1>
+      <h1 className="mb-4 text-xl font-bold text-text-primary">{t('pageTitle')}</h1>
       <Calculator instruments={instrumentRows} defaultAccountBalance={user.accountBalance} />
     </main>
   );
 }
 ```
+
+`PositionSizeCalculatorPage` is an async Server Component, so it must use `getTranslations` (awaited), never `useTranslations` — same rule as every async page from Task 13 onward. Add a `pageTitle` key to the `calculator` namespace (created in Step 1) in both message files: fr `"pageTitle": "Calculateur de taille de position"`, en `"pageTitle": "Position size calculator"`.
 
 - [ ] **Step 3: Embed the calculator in the trade form**
 
@@ -3534,10 +3538,10 @@ export function EquityCurveChart({ data }: { data: { date: string; cumulativePnl
     <div className="h-40 rounded-xl border border-border-subtle bg-surface p-4">
       <ResponsiveContainer width="100%" height="100%">
         <LineChart data={data}>
-          <XAxis dataKey="date" stroke="#9ca3af" fontSize={11} />
-          <YAxis stroke="#9ca3af" fontSize={11} />
-          <Tooltip contentStyle={{ background: '#12151a', border: '1px solid rgba(255,255,255,0.1)' }} />
-          <Line type="monotone" dataKey="cumulativePnl" stroke="#10b981" strokeWidth={2} dot={false} />
+          <XAxis dataKey="date" stroke="var(--color-muted)" fontSize={11} />
+          <YAxis stroke="var(--color-muted)" fontSize={11} />
+          <Tooltip contentStyle={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)' }} />
+          <Line type="monotone" dataKey="cumulativePnl" stroke="var(--color-accent)" strokeWidth={2} dot={false} />
         </LineChart>
       </ResponsiveContainer>
     </div>
@@ -3545,12 +3549,15 @@ export function EquityCurveChart({ data }: { data: { date: string; cumulativePnl
 }
 ```
 
+Use the CSS custom properties directly (`var(--color-muted)`, etc.), never literal hex — recharts renders inline SVG in the live DOM, so these resolve correctly and repaint automatically on theme toggle, same as every other themed element in this plan (per the Global Constraints' "never hardcoded hex/white/black" rule).
+
 - [ ] **Step 2: Create the dashboard page**
 
 `src/app/[locale]/(app)/dashboard/page.tsx`:
 
 ```tsx
 import { eq, and, isNotNull } from 'drizzle-orm';
+import { getTranslations } from 'next-intl/server';
 import { db } from '@/db/client';
 import { trades } from '@/db/schema';
 import { requireUser } from '@/lib/auth-helpers';
@@ -3584,26 +3591,27 @@ export default async function DashboardPage() {
   const weeklyStatus = calculateWeeklyLossStatus(statTrades, user.weeklyLossLimit, now);
   const monthlyStatus = calculateMonthlyLossStatus(statTrades, user.monthlyLossLimit, now);
   const streaks = calculateStreaks(statTrades);
+  const t = await getTranslations('dashboard');
 
   return (
     <main className="mx-auto max-w-4xl space-y-6 p-8">
-      <h1 className="text-xl font-bold text-text-primary">Dashboard</h1>
+      <h1 className="text-xl font-bold text-text-primary">{t('title')}</h1>
 
       <div className="grid grid-cols-4 gap-3">
-        <StatCard label="Win rate" value={`${winRate.toFixed(0)}%`} />
-        <StatCard label="Profit factor" value={profitFactor !== null ? profitFactor.toFixed(2) : '—'} />
-        <StatCard label="Espérance (R)" value={expectancy !== null ? expectancy.toFixed(2) : '—'} />
+        <StatCard label={t('winRate')} value={`${winRate.toFixed(0)}%`} />
+        <StatCard label={t('profitFactor')} value={profitFactor !== null ? profitFactor.toFixed(2) : '—'} />
+        <StatCard label={t('expectancy')} value={expectancy !== null ? expectancy.toFixed(2) : '—'} />
         <StatCard
-          label="Streak actuelle"
+          label={t('currentStreak')}
           value={String(streaks.currentStreak)}
           valueClassName={streaks.currentStreak >= 0 ? 'text-gain' : 'text-loss'}
         />
       </div>
 
       <div className="grid grid-cols-3 gap-3">
-        <LossLimitBar label="Perte journalière" status={dailyStatus} />
-        <LossLimitBar label="Perte hebdomadaire" status={weeklyStatus} />
-        <LossLimitBar label="Perte mensuelle" status={monthlyStatus} />
+        <LossLimitBar label={t('dailyLoss')} status={dailyStatus} />
+        <LossLimitBar label={t('weeklyLoss')} status={weeklyStatus} />
+        <LossLimitBar label={t('monthlyLoss')} status={monthlyStatus} />
       </div>
 
       <EquityCurveChart
@@ -3648,6 +3656,23 @@ function LossLimitBar({
   );
 }
 ```
+
+`DashboardPage` is an async Server Component, so it must use `getTranslations` (awaited), never `useTranslations`. Add a `dashboard` namespace to both message files:
+
+```json
+"dashboard": {
+  "title": "Dashboard",
+  "winRate": "Win rate",
+  "profitFactor": "Profit factor",
+  "expectancy": "Espérance (R)",
+  "currentStreak": "Streak actuelle",
+  "dailyLoss": "Perte journalière",
+  "weeklyLoss": "Perte hebdomadaire",
+  "monthlyLoss": "Perte mensuelle"
+}
+```
+
+(English: `"expectancy": "Expectancy (R)"`, `"currentStreak": "Current streak"`, `"dailyLoss": "Daily loss"`, `"weeklyLoss": "Weekly loss"`, `"monthlyLoss": "Monthly loss"`, rest identical.)
 
 - [ ] **Step 3: Manually verify**
 
@@ -3731,14 +3756,13 @@ export function HeatmapGrid({
 
 ```tsx
 import { eq, and, isNotNull } from 'drizzle-orm';
+import { getTranslations } from 'next-intl/server';
 import { db } from '@/db/client';
 import { trades, instruments } from '@/db/schema';
 import { requireUser } from '@/lib/auth-helpers';
 import { heatmapBySymbolAndDay, heatmapBySymbolAndDuration, heatmapBySymbolAndMonth } from '@/lib/heatmaps';
 import { HeatmapGrid } from './HeatmapGrid';
 
-const DAY_LABELS = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
-const MONTH_LABELS = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Août', 'Sep', 'Oct', 'Nov', 'Déc'];
 const DURATION_LABELS = ['<30m', '30m-1h', '1h-4h', '4h-1d', '>1d'];
 
 export default async function HeatmapsPage() {
@@ -3765,17 +3789,35 @@ export default async function HeatmapsPage() {
   const byDay = heatmapBySymbolAndDay(heatmapTrades);
   const byMonth = heatmapBySymbolAndMonth(heatmapTrades);
   const byDuration = heatmapBySymbolAndDuration(heatmapTrades);
+  const t = await getTranslations('heatmaps');
+  const dayLabels = t.raw('days') as string[];
+  const monthLabels = t.raw('months') as string[];
 
   return (
     <main className="mx-auto max-w-4xl space-y-4 p-8">
-      <h1 className="text-xl font-bold text-text-primary">Heatmaps de performance</h1>
-      <HeatmapGrid title="Symbole × Jour" columns={DAY_LABELS.map((_, i) => String(i))} data={byDay} />
-      <HeatmapGrid title="Symbole × Durée" columns={DURATION_LABELS} data={byDuration} />
-      <HeatmapGrid title="Symbole × Mois" columns={MONTH_LABELS.map((_, i) => String(i + 1))} data={byMonth} />
+      <h1 className="text-xl font-bold text-text-primary">{t('title')}</h1>
+      <HeatmapGrid title={t('bySymbolDay')} columns={dayLabels.map((_, i) => String(i))} data={byDay} />
+      <HeatmapGrid title={t('bySymbolDuration')} columns={DURATION_LABELS} data={byDuration} />
+      <HeatmapGrid title={t('bySymbolMonth')} columns={monthLabels.map((_, i) => String(i + 1))} data={byMonth} />
     </main>
   );
 }
 ```
+
+`HeatmapsPage` is an async Server Component, so it must use `getTranslations` (awaited), never `useTranslations`. The day/month abbreviation arrays are locale data, not just labels — retrieve them with `t.raw('days')`/`t.raw('months')` (next-intl's escape hatch for array/object message values) rather than a hardcoded module-level constant, so an English-locale user sees "Sun, Mon, Tue..." instead of "Dim, Lun, Mar...". Add a `heatmaps` namespace to both message files:
+
+```json
+"heatmaps": {
+  "title": "Heatmaps de performance",
+  "bySymbolDay": "Symbole × Jour",
+  "bySymbolDuration": "Symbole × Durée",
+  "bySymbolMonth": "Symbole × Mois",
+  "days": ["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"],
+  "months": ["Jan", "Fév", "Mar", "Avr", "Mai", "Juin", "Juil", "Août", "Sep", "Oct", "Nov", "Déc"]
+}
+```
+
+(English: `"title": "Performance heatmaps"`, `"bySymbolDay": "Symbol × Day"`, `"bySymbolDuration": "Symbol × Duration"`, `"bySymbolMonth": "Symbol × Month"`, `"days": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]`, `"months": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]`.)
 
 - [ ] **Step 3: Manually verify**
 
@@ -3806,6 +3848,7 @@ git commit -m "feat: add symbol x day/duration/month heatmaps page"
 
 ```tsx
 import { eq } from 'drizzle-orm';
+import { getTranslations } from 'next-intl/server';
 import { db } from '@/db/client';
 import { trades, tradeChecklistResponses, checklistRules } from '@/db/schema';
 import { requireUser } from '@/lib/auth-helpers';
@@ -3833,33 +3876,35 @@ export default async function ErreursPage() {
   );
 
   const analytics = calculateErrorsAnalytics(tradesWithResponses);
+  const t = await getTranslations('erreurs');
+  const tPhase = await getTranslations('trades');
   const phaseLabels: Record<ChecklistPhase, string> = {
-    pre_entry: 'Pré-entrée',
-    entry: 'Entrée',
-    management: 'Gestion',
-    exit: 'Sortie',
+    pre_entry: tPhase('phasePreEntry'),
+    entry: tPhase('phaseEntry'),
+    management: tPhase('phaseManagement'),
+    exit: tPhase('phaseExit'),
   };
 
   return (
     <main className="mx-auto max-w-3xl space-y-6 p-8">
-      <h1 className="text-xl font-bold text-text-primary">Erreurs</h1>
+      <h1 className="text-xl font-bold text-text-primary">{t('title')}</h1>
 
       <div className="grid grid-cols-4 gap-3">
-        <StatCard label="Erreurs totales" value={String(analytics.totalErrors)} />
-        <StatCard label="Catégories" value={String(analytics.byCategory.length)} />
+        <StatCard label={t('totalErrors')} value={String(analytics.totalErrors)} />
+        <StatCard label={t('categories')} value={String(analytics.byCategory.length)} />
         <StatCard
-          label="Trades avec erreurs"
+          label={t('tradesWithErrors')}
           value={
             analytics.totalTrades > 0
               ? `${((analytics.totalTradesWithErrors / analytics.totalTrades) * 100).toFixed(0)}%`
               : '—'
           }
         />
-        <StatCard label="Total trades" value={String(analytics.totalTrades)} />
+        <StatCard label={t('totalTrades')} value={String(analytics.totalTrades)} />
       </div>
 
       <div className="rounded-xl border border-border-subtle bg-surface p-4">
-        <h2 className="mb-3 font-bold text-text-primary">Par catégorie</h2>
+        <h2 className="mb-3 font-bold text-text-primary">{t('byCategory')}</h2>
         <ul className="space-y-1">
           {analytics.byCategory
             .sort((a, b) => b.count - a.count)
@@ -3869,16 +3914,16 @@ export default async function ErreursPage() {
                 <span>{c.count}</span>
               </li>
             ))}
-          {analytics.byCategory.length === 0 && <p className="text-text-muted">Aucune erreur enregistrée pour l'instant.</p>}
+          {analytics.byCategory.length === 0 && <p className="text-text-muted">{t('empty')}</p>}
         </ul>
       </div>
 
       <div className="rounded-xl border border-border-subtle bg-surface p-4">
-        <h2 className="mb-3 font-bold text-text-primary">Par phase du trade</h2>
+        <h2 className="mb-3 font-bold text-text-primary">{t('byPhase')}</h2>
         <table className="w-full text-sm text-text-primary">
           <thead className="text-text-muted">
             <tr>
-              <th className="p-1 text-left">Catégorie</th>
+              <th className="p-1 text-left">{t('category')}</th>
               {(['pre_entry', 'entry', 'management', 'exit'] as ChecklistPhase[]).map((phase) => (
                 <th key={phase} className="p-1">{phaseLabels[phase]}</th>
               ))}
@@ -3909,6 +3954,24 @@ function StatCard({ label, value }: { label: string; value: string }) {
   );
 }
 ```
+
+`ErreursPage` is an async Server Component, so it must use `getTranslations` (awaited), never `useTranslations`. Reuse the `trades` namespace's existing `phasePreEntry`/`phaseEntry`/`phaseManagement`/`phaseExit` keys (from Task 17) rather than duplicating them. Add an `erreurs` namespace to both message files:
+
+```json
+"erreurs": {
+  "title": "Erreurs",
+  "totalErrors": "Erreurs totales",
+  "categories": "Catégories",
+  "tradesWithErrors": "Trades avec erreurs",
+  "totalTrades": "Total trades",
+  "byCategory": "Par catégorie",
+  "empty": "Aucune erreur enregistrée pour l'instant.",
+  "byPhase": "Par phase du trade",
+  "category": "Catégorie"
+}
+```
+
+(English: `"title": "Errors"`, `"totalErrors": "Total errors"`, `"categories": "Categories"`, `"tradesWithErrors": "Trades with errors"`, `"totalTrades": "Total trades"`, `"byCategory": "By category"`, `"empty": "No errors recorded yet."`, `"byPhase": "By trade phase"`, `"category": "Category"`.)
 
 - [ ] **Step 2: Manually verify**
 
