@@ -14,5 +14,11 @@
     "loginSubmit": "Se connecter",
     "invalidCredentials": "Email ou mot de passe incorrect",
     "emailInUse": "Cet email est déjà utilisé"
+  },
+  "instruments": {
+    "name": "Nom",
+    "assetClass": "Type d'actif",
+    "pointValue": "Valeur du point",
+    "add": "Ajouter"
   }
 }

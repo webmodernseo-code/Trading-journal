@@ -14,5 +14,11 @@
     "loginSubmit": "Log in",
     "invalidCredentials": "Invalid email or password",
     "emailInUse": "This email is already in use"
+  },
+  "instruments": {
+    "name": "Name",
+    "assetClass": "Asset class",
+    "pointValue": "Point value",
+    "add": "Add"
   }
 }
