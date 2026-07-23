@@ -260,6 +260,14 @@
         "question": "Puis-je changer la devise de mon compte de trading ?",
         "answer": "Pas pour l'instant : l'app gère un compte de trading en euros uniquement. Le sélecteur de devise ci-dessus ne concerne que l'affichage du prix de l'abonnement."
       }
+    },
+    "footer": {
+      "ctaTitle": "Prêt à trader avec discipline ?",
+      "ctaButton": "Essai gratuit 14 jours",
+      "copyright": "© 2026 Journal. Tous droits réservés.",
+      "legalNotice": "Mentions légales",
+      "privacy": "Confidentialité",
+      "contact": "Contact"
     }
   }
 }

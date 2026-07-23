@@ -260,6 +260,14 @@
         "question": "Can I change my trading account's currency?",
         "answer": "Not yet: the app manages a euro-only trading account. The currency switcher above only affects how the subscription price is displayed."
       }
+    },
+    "footer": {
+      "ctaTitle": "Ready to trade with discipline?",
+      "ctaButton": "14-day free trial",
+      "copyright": "© 2026 Journal. All rights reserved.",
+      "legalNotice": "Legal notice",
+      "privacy": "Privacy",
+      "contact": "Contact"
     }
   }
 }
