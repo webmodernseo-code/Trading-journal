@@ -17,7 +17,7 @@ export function TradeFilters({ instruments, strategies }: { instruments: Instrum
   }
 
   return (
-    <div className="mb-4 flex flex-wrap gap-3">
+    <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
       <select
         defaultValue={searchParams.get('instrumentId') ?? ''}
         onChange={(e) => updateParam('instrumentId', e.target.value)}

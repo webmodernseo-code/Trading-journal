@@ -38,7 +38,7 @@ export default async function TradesPage({
   const t = await getTranslations('trades');
 
   return (
-    <main className="mx-auto max-w-4xl p-8">
+    <main className="mx-auto max-w-4xl p-4 md:p-8">
       <div className="mb-4 flex items-center justify-between">
         <h1 className="text-xl font-bold text-text-primary">{t('listTitle')}</h1>
         <Link href="/trades/new" className="rounded-md bg-cta px-4 py-2 font-bold text-bg">
@@ -46,7 +46,31 @@ export default async function TradesPage({
         </Link>
       </div>
       <TradeFilters instruments={instrumentRows} strategies={strategyRows} />
-      <table className="w-full text-left text-text-primary">
+
+      {/* Mobile: stacked cards */}
+      <div className="space-y-2 sm:hidden">
+        {rows.map((trade) => (
+          <Link
+            key={trade.id}
+            href={`/trades/${trade.id}`}
+            className="block rounded-md border border-border-subtle bg-surface p-3"
+          >
+            <div className="flex items-center justify-between text-sm text-text-primary">
+              <span>{trade.enteredAt.toLocaleDateString()}</span>
+              <span>{instrumentById.get(trade.instrumentId)}</span>
+            </div>
+            <div className="mt-1 flex items-center justify-between text-sm">
+              <span className="text-text-muted">{trade.direction}</span>
+              <span className={trade.pnlAmount && trade.pnlAmount >= 0 ? 'text-gain' : 'text-loss'}>
+                {trade.pnlAmount ?? '—'}
+              </span>
+            </div>
+          </Link>
+        ))}
+      </div>
+
+      {/* Desktop: table */}
+      <table className="hidden w-full text-left text-text-primary sm:table">
         <thead className="text-text-muted">
           <tr>
             <th className="p-2">{t('date')}</th>
