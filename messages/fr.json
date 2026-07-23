@@ -196,6 +196,27 @@
         "title": "Progresse",
         "description": "Identifie tes erreurs récurrentes et resserre ta discipline trade après trade."
       }
+    },
+    "testimonials": {
+      "eyebrow": "Avis clients",
+      "title": "Ce qu'en pensent les traders",
+      "disclaimer": "Le produit est encore jeune : ces avis sont des exemples de format, pas de vrais retours. Ils seront remplacés par de vrais témoignages dès qu'ils seront disponibles.",
+      "exampleTag": "Exemple",
+      "t1": {
+        "quote": "Enfin un journal qui calcule tout automatiquement. Je vois mes erreurs récurrentes en un coup d'œil.",
+        "name": "Léa M.",
+        "role": "Trading forex, 3 ans d'expérience"
+      },
+      "t2": {
+        "quote": "Les heatmaps m'ont fait réaliser que je perdais systématiquement le vendredi après-midi.",
+        "name": "Karim B.",
+        "role": "Day trader indices"
+      },
+      "t3": {
+        "quote": "Le suivi de discipline a changé ma façon de trader. Moins de revenge trading, plus de constance.",
+        "name": "Thomas R.",
+        "role": "Trading crypto"
+      }
     }
   }
 }

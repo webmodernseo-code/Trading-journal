@@ -196,6 +196,27 @@
         "title": "Improve",
         "description": "Spot your recurring mistakes and tighten your discipline trade after trade."
       }
+    },
+    "testimonials": {
+      "eyebrow": "Customer reviews",
+      "title": "What traders are saying",
+      "disclaimer": "The product is still young: these reviews are format examples, not real feedback. They'll be replaced with real testimonials as soon as they're available.",
+      "exampleTag": "Example",
+      "t1": {
+        "quote": "Finally a journal that calculates everything automatically. I spot my recurring mistakes at a glance.",
+        "name": "Lea M.",
+        "role": "Forex trader, 3 years experience"
+      },
+      "t2": {
+        "quote": "The heatmaps made me realize I was systematically losing on Friday afternoons.",
+        "name": "Karim B.",
+        "role": "Index day trader"
+      },
+      "t3": {
+        "quote": "Discipline tracking changed how I trade. Less revenge trading, more consistency.",
+        "name": "Thomas R.",
+        "role": "Crypto trading"
+      }
     }
   }
 }
