@@ -11,7 +11,9 @@
   --color-accent: #10b981;
   --color-accent-dim: rgba(16, 185, 129, 0.14);
   --color-gain: #34d399;
+  --color-gain-dim: rgba(52, 211, 153, 0.14);
   --color-loss: #fb7185;
+  --color-loss-dim: rgba(251, 113, 133, 0.14);
   --color-text: #f3f4f6;
   --color-muted: #8b93a1;
   --color-faint: #565d6b;
@@ -33,7 +35,9 @@
   --color-accent: #059669;
   --color-accent-dim: rgba(5, 150, 105, 0.1);
   --color-gain: #15803d;
+  --color-gain-dim: rgba(21, 128, 61, 0.1);
   --color-loss: #dc2626;
+  --color-loss-dim: rgba(220, 38, 38, 0.1);
   --color-text: #10171a;
   --color-muted: #5b6b66;
   --color-faint: #93a29c;
