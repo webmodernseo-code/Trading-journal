@@ -76,7 +76,7 @@ export default async function DashboardPage() {
 }
 
 // Tailwind safelist (dynamic class names built above must appear literally somewhere):
-// bg-gain-dim bg-loss-dim bg-info-dim text-gain text-loss text-info
+// bg-gain/15 bg-loss/15 bg-info/15 text-gain text-loss text-info
 function StatCard({
   Icon,
   colorClass,
@@ -90,7 +90,7 @@ function StatCard({
 }) {
   return (
     <div className="rounded-xl border border-border-subtle bg-surface p-4">
-      <div className={`mb-2 flex h-7 w-7 items-center justify-center rounded-lg bg-${colorClass}-dim`}>
+      <div className={`mb-2 flex h-7 w-7 items-center justify-center rounded-lg bg-${colorClass}/15`}>
         <Icon size={14} className={`text-${colorClass}`} />
       </div>
       <p className="text-xs uppercase tracking-wide text-text-muted">{label}</p>
