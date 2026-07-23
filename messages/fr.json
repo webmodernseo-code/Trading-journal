@@ -28,7 +28,14 @@
     "assetClass": "Type d'actif",
     "pointValue": "Valeur du point",
     "add": "Ajouter",
-    "delete": "Supprimer"
+    "delete": "Supprimer",
+    "assetClassLabels": {
+      "forex": "Forex",
+      "commodity": "Matière première",
+      "crypto": "Crypto",
+      "index": "Indice",
+      "other": "Autre"
+    }
   },
   "strategies": {
     "title": "Stratégies",

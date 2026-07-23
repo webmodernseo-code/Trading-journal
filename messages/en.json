@@ -28,7 +28,14 @@
     "assetClass": "Asset class",
     "pointValue": "Point value",
     "add": "Add",
-    "delete": "Delete"
+    "delete": "Delete",
+    "assetClassLabels": {
+      "forex": "Forex",
+      "commodity": "Commodity",
+      "crypto": "Crypto",
+      "index": "Index",
+      "other": "Other"
+    }
   },
   "strategies": {
     "title": "Strategies",

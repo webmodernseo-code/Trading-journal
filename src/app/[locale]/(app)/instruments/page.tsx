@@ -5,6 +5,7 @@ import { db } from '@/db/client';
 import { instruments } from '@/db/schema';
 import { requireUser } from '@/lib/auth-helpers';
 import { InstrumentForm } from './InstrumentForm';
+import { AssetClassBadge } from './AssetClassBadge';
 import { deleteInstrument } from './actions';
 
 export default async function InstrumentsPage() {
@@ -19,8 +20,10 @@ export default async function InstrumentsPage() {
       <ul className="mt-4 space-y-2">
         {rows.map((instrument) => (
           <li key={instrument.id} className="flex items-center justify-between rounded-md border border-border-subtle bg-surface p-3">
-            <span className="text-text-primary">
-              {instrument.name} — {instrument.assetClass} — {t('pointValue').toLowerCase()}: {instrument.pointValue}
+            <span className="flex items-center gap-2 text-text-primary">
+              {instrument.name}
+              <AssetClassBadge assetClass={instrument.assetClass} />
+              — {t('pointValue').toLowerCase()}: {instrument.pointValue}
             </span>
             <form action={async () => { 'use server'; await deleteInstrument(instrument.id); }}>
               <button type="submit" className="flex items-center gap-1 text-sm text-loss">
