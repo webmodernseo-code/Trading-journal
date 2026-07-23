@@ -501,7 +501,7 @@ function StatCard({
 }) {
   return (
     <div className="rounded-xl border border-border-subtle bg-surface p-4">
-      <div className={`mb-2 flex h-7 w-7 items-center justify-center rounded-lg bg-${colorClass}-dim`}>
+      <div className={`mb-2 flex h-7 w-7 items-center justify-center rounded-lg bg-${colorClass}/15`}>
         <Icon size={14} className={`text-${colorClass}`} />
       </div>
       <p className="text-xs uppercase tracking-wide text-text-muted">{label}</p>
@@ -535,11 +535,11 @@ function LossLimitBar({
 }
 ```
 
-Note on `bg-${colorClass}-dim` / `text-${colorClass}`: Tailwind's JIT compiler needs to see full class name strings in source to generate them — dynamic template-literal class names normally risk being purged. This works here because `gain`, `loss`, and `info` (the only three values `colorClass` ever takes) already appear as complete literal class names elsewhere in this same file (`text-gain`/`text-loss` in the streak/PnL logic, `text-info`/`bg-info-dim` nowhere else yet) and across the app (`bg-gain/20`, `text-loss`, etc. in `HeatmapGrid.tsx`) — Tailwind's scanner covers the whole `src/**/*.{ts,tsx}` glob (see `tailwind.config.ts`'s `content` field), so as long as the literal strings `bg-gain-dim`, `bg-loss-dim`, `bg-info-dim`, `text-gain`, `text-loss`, `text-info` each appear verbatim *somewhere* in the codebase, they'll be generated. They do not all currently exist as literal strings — add this safelist comment directly above the `StatCard` function so the literal strings are physically present in the file for Tailwind's scanner:
+Note on `bg-${colorClass}/15` / `text-${colorClass}`: `gain`, `loss`, and `info` (the only three values `colorClass` ever takes) are all real, already-registered Tailwind color tokens (Task 1 added `info`; `gain`/`loss` predate this plan), so Tailwind's built-in opacity-modifier syntax (`color/15` = that color at 15% opacity) works for all three natively — no new token needed, matching the same `bg-gain/20`-style pattern already used in `HeatmapGrid.tsx`. (An earlier draft of this task used a separate `-dim` suffixed token here, e.g. `bg-gain-dim` — that doesn't exist for `gain`/`loss` and silently renders no background at all; the opacity-modifier form used below is the correct approach and needs no additional token.) Tailwind's JIT compiler still needs to see the full class name string in source to generate it — dynamic template-literal class names normally risk being purged. This works here because `gain`, `loss`, and `info` already appear as complete literal class names elsewhere in this same file (`text-gain`/`text-loss` in the streak/PnL logic) and across the app (`bg-gain/20`, `text-loss`, etc. in `HeatmapGrid.tsx`) — Tailwind's scanner covers the whole `src/**/*.{ts,tsx}` glob (see `tailwind.config.ts`'s `content` field). `bg-info/15` does not yet appear anywhere else, so it needs to be physically present as a literal string for the scanner to pick it up — add this safelist comment directly above the `StatCard` function:
 
 ```tsx
 // Tailwind safelist (dynamic class names built above must appear literally somewhere):
-// bg-gain-dim bg-loss-dim bg-info-dim text-gain text-loss text-info
+// bg-gain/15 bg-loss/15 bg-info/15 text-gain text-loss text-info
 ```
 
 - [ ] **Step 2: Run the type check and test suite**
