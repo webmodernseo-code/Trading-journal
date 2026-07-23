@@ -217,6 +217,25 @@
         "name": "Thomas R.",
         "role": "Trading crypto"
       }
+    },
+    "pricing": {
+      "eyebrow": "Pricing",
+      "title": "Un essai gratuit de 14 jours, sans carte",
+      "subtitle": "Ensuite, choisis la formule qui te convient.",
+      "trialTag": "14 jours gratuits",
+      "bestValue": "Meilleure valeur",
+      "monthly": {
+        "name": "Mensuel",
+        "period": "/ mois",
+        "note": "Sans engagement, annulable à tout moment."
+      },
+      "lifetime": {
+        "name": "À vie",
+        "period": "paiement unique",
+        "note": "Payé une fois, accès à vie."
+      },
+      "cta": "Démarrer l'essai gratuit",
+      "noCard": "Aucune carte bancaire requise pour l'essai."
     }
   }
 }

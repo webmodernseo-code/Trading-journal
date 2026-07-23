@@ -217,6 +217,25 @@
         "name": "Thomas R.",
         "role": "Crypto trading"
       }
+    },
+    "pricing": {
+      "eyebrow": "Pricing",
+      "title": "A 14-day free trial, no card required",
+      "subtitle": "Then pick the plan that suits you.",
+      "trialTag": "14 days free",
+      "bestValue": "Best value",
+      "monthly": {
+        "name": "Monthly",
+        "period": "/ month",
+        "note": "No commitment, cancel anytime."
+      },
+      "lifetime": {
+        "name": "Lifetime",
+        "period": "one-time payment",
+        "note": "Pay once, lifetime access."
+      },
+      "cta": "Start the free trial",
+      "noCard": "No credit card required for the trial."
     }
   }
 }
