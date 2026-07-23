@@ -147,6 +147,14 @@
       "login": "Se connecter",
       "cta": "Essai gratuit 14 jours",
       "menuToggle": "Menu"
+    },
+    "hero": {
+      "eyebrow": "Discipline · Statistiques · Progression",
+      "titleLine1": "Trade avec discipline.",
+      "titleLine2": "Progresse avec des données.",
+      "subtitle": "Le journal de trading qui relie chaque trade à tes stats, tes erreurs et ta stratégie — pour de vrai.",
+      "ctaPrimary": "Essai gratuit 14 jours",
+      "ctaSecondary": "Voir un aperçu"
     }
   }
 }

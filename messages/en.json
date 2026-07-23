@@ -147,6 +147,14 @@
       "login": "Log in",
       "cta": "14-day free trial",
       "menuToggle": "Menu"
+    },
+    "hero": {
+      "eyebrow": "Discipline · Statistics · Progress",
+      "titleLine1": "Trade with discipline.",
+      "titleLine2": "Improve with real data.",
+      "subtitle": "The trading journal that connects every trade to your stats, your mistakes, and your strategy — for real.",
+      "ctaPrimary": "14-day free trial",
+      "ctaSecondary": "See a preview"
     }
   }
 }
