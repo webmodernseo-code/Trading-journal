@@ -1,5 +1,6 @@
 import { eq, and, isNotNull } from 'drizzle-orm';
 import { getTranslations } from 'next-intl/server';
+import { TrendingUp, Scale, Target, Flame, type LucideIcon } from 'lucide-react';
 import { db } from '@/db/client';
 import { trades } from '@/db/schema';
 import { requireUser } from '@/lib/auth-helpers';
@@ -36,21 +37,32 @@ export default async function DashboardPage() {
   const t = await getTranslations('dashboard');
 
   return (
-    <main className="mx-auto max-w-4xl space-y-6 p-8">
+    <main className="mx-auto max-w-4xl space-y-6 p-4 md:p-8">
       <h1 className="text-xl font-bold text-text-primary">{t('title')}</h1>
 
-      <div className="grid grid-cols-4 gap-3">
-        <StatCard label={t('winRate')} value={`${winRate.toFixed(0)}%`} />
-        <StatCard label={t('profitFactor')} value={profitFactor !== null ? profitFactor.toFixed(2) : '—'} />
-        <StatCard label={t('expectancy')} value={expectancy !== null ? expectancy.toFixed(2) : '—'} />
+      <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+        <StatCard Icon={TrendingUp} colorClass="gain" label={t('winRate')} value={`${winRate.toFixed(0)}%`} />
         <StatCard
+          Icon={Target}
+          colorClass="info"
+          label={t('profitFactor')}
+          value={profitFactor !== null ? profitFactor.toFixed(2) : '—'}
+        />
+        <StatCard
+          Icon={Scale}
+          colorClass="info"
+          label={t('expectancy')}
+          value={expectancy !== null ? expectancy.toFixed(2) : '—'}
+        />
+        <StatCard
+          Icon={Flame}
+          colorClass={streaks.currentStreak >= 0 ? 'gain' : 'loss'}
           label={t('currentStreak')}
           value={String(streaks.currentStreak)}
-          valueClassName={streaks.currentStreak >= 0 ? 'text-gain' : 'text-loss'}
         />
       </div>
 
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
         <LossLimitBar label={t('dailyLoss')} status={dailyStatus} />
         <LossLimitBar label={t('weeklyLoss')} status={weeklyStatus} />
         <LossLimitBar label={t('monthlyLoss')} status={monthlyStatus} />
@@ -63,11 +75,26 @@ export default async function DashboardPage() {
   );
 }
 
-function StatCard({ label, value, valueClassName }: { label: string; value: string; valueClassName?: string }) {
+// Tailwind safelist (dynamic class names built above must appear literally somewhere):
+// bg-gain-dim bg-loss-dim bg-info-dim text-gain text-loss text-info
+function StatCard({
+  Icon,
+  colorClass,
+  label,
+  value,
+}: {
+  Icon: LucideIcon;
+  colorClass: 'gain' | 'loss' | 'info';
+  label: string;
+  value: string;
+}) {
   return (
     <div className="rounded-xl border border-border-subtle bg-surface p-4">
+      <div className={`mb-2 flex h-7 w-7 items-center justify-center rounded-lg bg-${colorClass}-dim`}>
+        <Icon size={14} className={`text-${colorClass}`} />
+      </div>
       <p className="text-xs uppercase tracking-wide text-text-muted">{label}</p>
-      <p className={`mt-1 text-lg font-bold ${valueClassName ?? 'text-text-primary'}`}>{value}</p>
+      <p className={`mt-1 text-lg font-bold text-${colorClass}`}>{value}</p>
     </div>
   );
 }
@@ -80,6 +107,7 @@ function LossLimitBar({
   status: { currentLoss: number; limit: number | null; percentUsed: number | null };
 }) {
   const percent = status.percentUsed !== null ? Math.min(status.percentUsed, 100) : 0;
+  const barColorClass = percent >= 100 ? 'bg-loss' : percent >= 70 ? 'bg-warning' : 'bg-accent';
   return (
     <div className="rounded-xl border border-border-subtle bg-surface p-4">
       <div className="mb-2 flex justify-between text-sm text-text-primary">
@@ -89,10 +117,7 @@ function LossLimitBar({
         </span>
       </div>
       <div className="h-2 overflow-hidden rounded-full bg-bg">
-        <div
-          className={`h-full ${percent >= 100 ? 'bg-loss' : 'bg-accent'}`}
-          style={{ width: `${percent}%` }}
-        />
+        <div className={`h-full ${barColorClass}`} style={{ width: `${percent}%` }} />
       </div>
     </div>
   );
