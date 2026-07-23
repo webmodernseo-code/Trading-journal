@@ -2,9 +2,6 @@
   "common": {
     "appName": "Journal"
   },
-  "home": {
-    "scaffolding": "Trading journal — under construction"
-  },
   "calculator": {
     "pageTitle": "Position size calculator",
     "accountBalance": "Account balance",

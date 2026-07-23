@@ -2,9 +2,6 @@
   "common": {
     "appName": "Journal"
   },
-  "home": {
-    "scaffolding": "Journal de trading — en construction"
-  },
   "calculator": {
     "pageTitle": "Calculateur de taille de position",
     "accountBalance": "Solde du compte",
