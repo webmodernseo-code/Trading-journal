@@ -22,7 +22,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
     .reduce((sum, t) => sum + t.pnlAmount, 0);
 
   return (
-    <div className="flex min-h-screen bg-bg">
+    <div className="flex min-h-screen flex-col bg-bg md:flex-row">
       <Sidebar todayPnl={todayPnl} todayStatus={todayStatus} />
       <div className="min-w-0 flex-1">
         <TopBar />

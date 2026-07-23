@@ -110,7 +110,8 @@
     "calculator": "Calculateur",
     "today": "Aujourd'hui",
     "ofDailyLimit": "de la limite journalière",
-    "account": "Compte"
+    "account": "Compte",
+    "menuToggle": "Menu"
   },
   "dashboard": {
     "title": "Dashboard",
