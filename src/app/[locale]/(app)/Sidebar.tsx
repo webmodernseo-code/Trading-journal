@@ -3,32 +3,43 @@
 import { usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
+import {
+  LayoutDashboard,
+  LayoutGrid,
+  AlertTriangle,
+  BookOpen,
+  BarChart3,
+  Coins,
+  ClipboardCheck,
+  Calculator,
+  type LucideIcon,
+} from 'lucide-react';
 import type { LossLimitStatus } from '@/lib/loss-limits';
 
-const NAV_GROUPS = [
+const NAV_GROUPS: { labelKey: string; links: { href: string; labelKey: string; Icon: LucideIcon }[] }[] = [
   {
     labelKey: 'overview',
     links: [
-      { href: '/dashboard', labelKey: 'dashboard' },
-      { href: '/dashboard/heatmaps', labelKey: 'heatmaps' },
-      { href: '/erreurs', labelKey: 'erreurs' },
+      { href: '/dashboard', labelKey: 'dashboard', Icon: LayoutDashboard },
+      { href: '/dashboard/heatmaps', labelKey: 'heatmaps', Icon: LayoutGrid },
+      { href: '/erreurs', labelKey: 'erreurs', Icon: AlertTriangle },
     ],
   },
   {
     labelKey: 'journal',
-    links: [{ href: '/trades', labelKey: 'trades' }],
+    links: [{ href: '/trades', labelKey: 'trades', Icon: BookOpen }],
   },
   {
     labelKey: 'configuration',
     links: [
-      { href: '/strategies', labelKey: 'strategies' },
-      { href: '/instruments', labelKey: 'instruments' },
-      { href: '/checklist', labelKey: 'checklist' },
+      { href: '/strategies', labelKey: 'strategies', Icon: BarChart3 },
+      { href: '/instruments', labelKey: 'instruments', Icon: Coins },
+      { href: '/checklist', labelKey: 'checklist', Icon: ClipboardCheck },
     ],
   },
   {
     labelKey: 'tools',
-    links: [{ href: '/tools/position-size-calculator', labelKey: 'calculator' }],
+    links: [{ href: '/tools/position-size-calculator', labelKey: 'calculator', Icon: Calculator }],
   },
 ];
 
@@ -42,7 +53,7 @@ export function Sidebar({ todayPnl, todayStatus }: { todayPnl: number; todayStat
   }
 
   return (
-    <nav className="flex w-56 flex-shrink-0 flex-col border-r border-border-subtle bg-sidebar p-3">
+    <nav className="hidden w-56 flex-shrink-0 flex-col border-r border-border-subtle bg-sidebar p-3 md:flex">
       <div className="mb-4 flex items-center gap-2 px-2 py-1 text-base font-bold text-text-primary">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
           <rect x="4" y="3" width="16" height="18" rx="3" stroke="currentColor" className="text-accent" strokeWidth="1.8" />
@@ -63,17 +74,18 @@ export function Sidebar({ todayPnl, todayStatus }: { todayPnl: number; todayStat
           <div className="px-2 pb-1 text-[10px] font-bold uppercase tracking-wide text-text-faint">
             {t(group.labelKey)}
           </div>
-          {group.links.map((link) => (
+          {group.links.map(({ href, labelKey, Icon }) => (
             <Link
-              key={link.href}
-              href={link.href}
-              className={`block rounded-md px-2 py-1.5 text-sm ${
-                isActive(link.href)
+              key={href}
+              href={href}
+              className={`flex items-center gap-2 rounded-md px-2 py-1.5 text-sm ${
+                isActive(href)
                   ? 'bg-surface font-semibold text-text-primary'
                   : 'text-text-muted hover:text-text-primary'
               }`}
             >
-              {t(link.labelKey)}
+              <Icon size={15} />
+              {t(labelKey)}
             </Link>
           ))}
         </div>

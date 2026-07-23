@@ -3,6 +3,7 @@
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
+import { UserCircle } from 'lucide-react';
 import { ThemeToggle } from './ThemeToggle';
 
 export function TopBar() {
@@ -30,10 +31,10 @@ export function TopBar() {
       </div>
       <Link
         href="/settings"
-        className="flex h-6 w-6 items-center justify-center rounded-full border border-border-subtle bg-surface-2 text-[10px] text-text-muted"
+        className="flex h-7 w-7 items-center justify-center rounded-full border border-border-subtle bg-surface-2 text-text-muted"
         title={t('account')}
       >
-        •
+        <UserCircle size={15} />
       </Link>
     </div>
   );
