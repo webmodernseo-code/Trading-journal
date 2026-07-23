@@ -845,7 +845,7 @@ export function PricingSection() {
             {t('cta')}
           </Link>
         </div>
-        <div className="relative flex-1 rounded-xl border border-[#ffa361] bg-[#12181a] p-6">
+        <div className="relative flex-1 rounded-xl border border-[#ffa361] bg-[#12151a] p-6">
           <span className="absolute -top-3 right-4 rounded-full bg-[#ffa361] px-2.5 py-0.5 text-[9px] font-extrabold text-[#1a0e05]">
             {t('bestValue')}
           </span>
