@@ -7,6 +7,7 @@ import { NeonDbError } from '@neondatabase/serverless';
 import { db } from '@/db/client';
 import { users, checklistRules, type User } from '@/db/schema';
 import { DEFAULT_CHECKLIST_RULES } from '@/lib/checklist-seed';
+import { seedDemoData } from '@/lib/demo-seed';
 import { signIn } from '@/auth';
 
 export async function registerAction(formData: FormData) {
@@ -41,6 +42,8 @@ export async function registerAction(formData: FormData) {
       displayOrder: index,
     }))
   );
+
+  await seedDemoData(newUser.id);
 
   try {
     await signIn('credentials', { email, password, redirect: false });
