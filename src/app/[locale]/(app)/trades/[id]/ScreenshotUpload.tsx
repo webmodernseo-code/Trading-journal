@@ -1,6 +1,7 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
+import { Upload } from 'lucide-react';
 import { uploadScreenshot } from './actions';
 
 export function ScreenshotUpload({ tradeId }: { tradeId: string }) {
@@ -18,7 +19,8 @@ export function ScreenshotUpload({ tradeId }: { tradeId: string }) {
         {t('caption')}
         <input name="caption" className="mt-1 block rounded-md bg-bg p-2 text-text-primary" />
       </label>
-      <button type="submit" className="rounded-md bg-cta px-4 py-2 font-bold text-bg">
+      <button type="submit" className="flex items-center gap-1.5 rounded-md bg-cta px-4 py-2 font-bold text-bg">
+        <Upload size={14} />
         {t('upload')}
       </button>
     </form>
