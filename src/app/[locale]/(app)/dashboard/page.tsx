@@ -9,6 +9,7 @@ import { calculateDailyLossStatus, calculateWeeklyLossStatus, calculateMonthlyLo
 import { calculateStreaks } from '@/lib/streaks';
 import { calculateRMultiple } from '@/lib/calculations';
 import { EquityCurveChart } from './EquityCurveChart';
+import { DemoBanner } from './DemoBanner';
 
 export default async function DashboardPage() {
   const user = await requireUser();
@@ -17,6 +18,12 @@ export default async function DashboardPage() {
     .select()
     .from(trades)
     .where(and(eq(trades.userId, user.id), eq(trades.status, 'closed'), isNotNull(trades.exitedAt)));
+
+  const [demoTrade] = await db
+    .select({ id: trades.id })
+    .from(trades)
+    .where(and(eq(trades.userId, user.id), eq(trades.isDemo, true)))
+    .limit(1);
 
   const statTrades = closedTrades.map((t) => ({
     id: t.id,
@@ -39,6 +46,8 @@ export default async function DashboardPage() {
   return (
     <main className="mx-auto max-w-4xl space-y-6 p-4 md:p-8">
       <h1 className="text-xl font-bold text-text-primary">{t('title')}</h1>
+
+      {demoTrade && <DemoBanner />}
 
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
         <StatCard Icon={TrendingUp} colorClass="gain" label={t('winRate')} value={`${winRate.toFixed(0)}%`} />

@@ -121,7 +121,11 @@
     "currentStreak": "Current streak",
     "dailyLoss": "Daily loss",
     "weeklyLoss": "Weekly loss",
-    "monthlyLoss": "Monthly loss"
+    "monthlyLoss": "Monthly loss",
+    "demoBanner": {
+      "text": "These are sample data — explore the app freely.",
+      "clearButton": "Clear everything and start fresh"
+    }
   },
   "heatmaps": {
     "title": "Performance heatmaps",

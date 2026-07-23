@@ -121,7 +121,11 @@
     "currentStreak": "Streak actuelle",
     "dailyLoss": "Perte journalière",
     "weeklyLoss": "Perte hebdomadaire",
-    "monthlyLoss": "Perte mensuelle"
+    "monthlyLoss": "Perte mensuelle",
+    "demoBanner": {
+      "text": "Ce sont des données d'exemple — explore librement l'app.",
+      "clearButton": "Tout effacer et repartir de zéro"
+    }
   },
   "heatmaps": {
     "title": "Heatmaps de performance",
