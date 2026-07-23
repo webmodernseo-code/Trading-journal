@@ -155,6 +155,26 @@
       "subtitle": "The trading journal that connects every trade to your stats, your mistakes, and your strategy — for real.",
       "ctaPrimary": "14-day free trial",
       "ctaSecondary": "See a preview"
+    },
+    "features": {
+      "eyebrow": "Features",
+      "title": "Everything you need to improve",
+      "dashboard": {
+        "title": "Complete dashboard",
+        "description": "Win rate, profit factor, expectancy, equity curve, and loss limits at a glance."
+      },
+      "errors": {
+        "title": "Error tracking",
+        "description": "Spot your recurring mistakes — revenge trading, wrong position size, a forgotten stop loss."
+      },
+      "heatmaps": {
+        "title": "Performance heatmaps",
+        "description": "Find your best trading days, durations, and months with heatmaps broken down by instrument."
+      },
+      "calculator": {
+        "title": "Position size calculator",
+        "description": "Calculate your ideal position size from your risk and your stop distance."
+      }
     }
   }
 }

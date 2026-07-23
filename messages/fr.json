@@ -155,6 +155,26 @@
       "subtitle": "Le journal de trading qui relie chaque trade à tes stats, tes erreurs et ta stratégie — pour de vrai.",
       "ctaPrimary": "Essai gratuit 14 jours",
       "ctaSecondary": "Voir un aperçu"
+    },
+    "features": {
+      "eyebrow": "Fonctionnalités",
+      "title": "Tout ce qu'il te faut pour progresser",
+      "dashboard": {
+        "title": "Dashboard complet",
+        "description": "Win rate, profit factor, espérance, courbe d'équité et limites de perte en un coup d'œil."
+      },
+      "errors": {
+        "title": "Suivi des erreurs",
+        "description": "Identifie tes erreurs récurrentes — revenge trading, taille de position, stop loss oublié."
+      },
+      "heatmaps": {
+        "title": "Heatmaps de performance",
+        "description": "Repère tes meilleurs jours, durées et mois de trading grâce aux heatmaps croisées par instrument."
+      },
+      "calculator": {
+        "title": "Calculateur de taille de position",
+        "description": "Calcule ta taille de position idéale à partir de ton risque et de la distance de ton stop."
+      }
     }
   }
 }
