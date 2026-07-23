@@ -136,5 +136,17 @@
     "empty": "Aucune erreur enregistrée pour l'instant.",
     "byPhase": "Par phase du trade",
     "category": "Catégorie"
+  },
+  "landing": {
+    "nav": {
+      "brand": "Journal",
+      "features": "Fonctionnalités",
+      "pricing": "Pricing",
+      "reviews": "Avis",
+      "faq": "FAQ",
+      "login": "Se connecter",
+      "cta": "Essai gratuit 14 jours",
+      "menuToggle": "Menu"
+    }
   }
 }

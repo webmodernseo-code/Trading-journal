@@ -136,5 +136,17 @@
     "empty": "No errors recorded yet.",
     "byPhase": "By trade phase",
     "category": "Category"
+  },
+  "landing": {
+    "nav": {
+      "brand": "Journal",
+      "features": "Features",
+      "pricing": "Pricing",
+      "reviews": "Reviews",
+      "faq": "FAQ",
+      "login": "Log in",
+      "cta": "14-day free trial",
+      "menuToggle": "Menu"
+    }
   }
 }
