@@ -64,11 +64,15 @@ messages/fr.json, messages/en.json                          — new keys, added 
 - Consumes: none.
 - Produces: Tailwind classes `text-info`/`bg-info`/`border-info`, `bg-info-dim`, `text-warning`/`bg-warning`, `bg-warning-dim`, `text-asset-commodity`/`bg-asset-commodity`, `text-asset-index`/`bg-asset-index` — used by Tasks 4, 7.
 
+> **Post-implementation fix note (applied during Task 4):** the two steps below, as originally written, did not add `gain-dim`/`loss-dim` tokens — only `gain`/`loss` (no dim variant) existed at the time, carried over unchanged from the main app plan. Task 4's `StatCard` needs a dim/tinted background for `gain`/`loss` (not just `info`), and a pre-existing bug was found in `HeatmapGrid.tsx` (main app plan, Task 8) using `bg-gain/20`/`bg-loss/20` — Tailwind's opacity-modifier syntax (`color/N`) silently produces no CSS at all for a color defined as a bare `var(--color-x)` theme value (confirmed by building the actual Tailwind CSS output), so that background has never rendered. The steps below are shown already corrected to include `gain-dim`/`loss-dim`, so a fresh read of this plan is self-consistent — but if you are diffing against an earlier version of this file, the addition of `--color-gain-dim`/`--color-loss-dim` and their Tailwind mappings is what changed.
+
 - [ ] **Step 1: Add the new CSS custom properties**
 
-In `src/app/globals.css`, add these four lines to the `:root { ... }` block (after `--color-cta: #ffffff;`):
+In `src/app/globals.css`, add these lines to the `:root { ... }` block (after `--color-cta: #ffffff;`):
 
 ```css
+  --color-gain-dim: rgba(52, 211, 153, 0.14);
+  --color-loss-dim: rgba(251, 113, 133, 0.14);
   --color-info: #60a5fa;
   --color-info-dim: rgba(96, 165, 250, 0.14);
   --color-warning: #fbbf24;
@@ -77,9 +81,13 @@ In `src/app/globals.css`, add these four lines to the `:root { ... }` block (aft
   --color-asset-index: #5eead4;
 ```
 
-And these six lines to the `:root[data-theme='light'] { ... }` block (after `--color-cta: #10171a;`):
+(`--color-gain-dim`/`--color-loss-dim` are inserted as new lines right after the existing `--color-gain: #34d399;` / `--color-loss: #fb7185;` declarations, not after `--color-cta` — place them immediately following their respective base color for readability, matching how `--color-info`/`--color-info-dim` already sit next to each other.)
+
+And these lines to the `:root[data-theme='light'] { ... }` block (after `--color-cta: #10171a;`), with `--color-gain-dim`/`--color-loss-dim` placed the same way, right after their light-theme base colors (`--color-gain: #15803d;` / `--color-loss: #dc2626;`):
 
 ```css
+  --color-gain-dim: rgba(21, 128, 61, 0.1);
+  --color-loss-dim: rgba(220, 38, 38, 0.1);
   --color-info: #2563eb;
   --color-info-dim: rgba(37, 99, 235, 0.1);
   --color-warning: #d97706;
@@ -90,7 +98,7 @@ And these six lines to the `:root[data-theme='light'] { ... }` block (after `--c
 
 - [ ] **Step 2: Map the tokens in Tailwind**
 
-In `tailwind.config.ts`, add these lines to `theme.extend.colors` (after `cta: 'var(--color-cta)',`):
+In `tailwind.config.ts`, add `'gain-dim': 'var(--color-gain-dim)'` immediately after the existing `gain: 'var(--color-gain)',` line, and `'loss-dim': 'var(--color-loss-dim)'` immediately after the existing `loss: 'var(--color-loss)',` line. Then add these lines to `theme.extend.colors` (after `cta: 'var(--color-cta)',`):
 
 ```typescript
         info: 'var(--color-info)',
@@ -501,7 +509,7 @@ function StatCard({
 }) {
   return (
     <div className="rounded-xl border border-border-subtle bg-surface p-4">
-      <div className={`mb-2 flex h-7 w-7 items-center justify-center rounded-lg bg-${colorClass}/15`}>
+      <div className={`mb-2 flex h-7 w-7 items-center justify-center rounded-lg bg-${colorClass}-dim`}>
         <Icon size={14} className={`text-${colorClass}`} />
       </div>
       <p className="text-xs uppercase tracking-wide text-text-muted">{label}</p>
@@ -535,11 +543,11 @@ function LossLimitBar({
 }
 ```
 
-Note on `bg-${colorClass}/15` / `text-${colorClass}`: `gain`, `loss`, and `info` (the only three values `colorClass` ever takes) are all real, already-registered Tailwind color tokens (Task 1 added `info`; `gain`/`loss` predate this plan), so Tailwind's built-in opacity-modifier syntax (`color/15` = that color at 15% opacity) works for all three natively — no new token needed, matching the same `bg-gain/20`-style pattern already used in `HeatmapGrid.tsx`. (An earlier draft of this task used a separate `-dim` suffixed token here, e.g. `bg-gain-dim` — that doesn't exist for `gain`/`loss` and silently renders no background at all; the opacity-modifier form used below is the correct approach and needs no additional token.) Tailwind's JIT compiler still needs to see the full class name string in source to generate it — dynamic template-literal class names normally risk being purged. This works here because `gain`, `loss`, and `info` already appear as complete literal class names elsewhere in this same file (`text-gain`/`text-loss` in the streak/PnL logic) and across the app (`bg-gain/20`, `text-loss`, etc. in `HeatmapGrid.tsx`) — Tailwind's scanner covers the whole `src/**/*.{ts,tsx}` glob (see `tailwind.config.ts`'s `content` field). `bg-info/15` does not yet appear anywhere else, so it needs to be physically present as a literal string for the scanner to pick it up — add this safelist comment directly above the `StatCard` function:
+Note on `bg-${colorClass}-dim` / `text-${colorClass}`: `gain-dim`, `loss-dim`, and `info-dim` are all real, registered Tailwind tokens (Task 1, as corrected above, defines `--color-gain-dim`/`--color-loss-dim` as concrete `rgba(...)` values, exactly like the pre-existing `--color-info-dim`/`--color-warning-dim`). Do NOT use Tailwind's opacity-modifier syntax (`` `bg-${colorClass}/15` ``) here — an earlier draft of this task tried that and it was found to silently produce no CSS at all: `gain`/`loss`/`info` are registered in `tailwind.config.ts` as bare `var(--color-x)` references, and Tailwind's opacity-modifier resolution cannot parse an alpha channel out of an opaque CSS-variable string, so `color/N` classes built from these tokens are dropped with no error or warning (confirmed by building the actual Tailwind CSS output and grepping for the class — it's absent). The concrete `-dim` token form used below is the only approach that actually renders. Tailwind's JIT compiler still needs to see the full class name string in source to generate it — dynamic template-literal class names normally risk being purged. `text-gain`/`text-loss`/`text-info` already appear as complete literal strings elsewhere in this file/app, but `bg-gain-dim`/`bg-loss-dim`/`bg-info-dim` do not yet appear anywhere else, so they need to be physically present as literal strings for the scanner to pick them up — add this safelist comment directly above the `StatCard` function:
 
 ```tsx
 // Tailwind safelist (dynamic class names built above must appear literally somewhere):
-// bg-gain/15 bg-loss/15 bg-info/15 text-gain text-loss text-info
+// bg-gain-dim bg-loss-dim bg-info-dim text-gain text-loss text-info
 ```
 
 - [ ] **Step 2: Run the type check and test suite**
@@ -1127,6 +1135,8 @@ git commit -m "feat: add responsive card view for the trades list on mobile"
 
 - [ ] **Step 1: Make the grid horizontally scrollable with a sticky first column**
 
+Note: the cell background classes below use `bg-gain-dim`/`bg-loss-dim` (Task 1, as corrected, defines these), not the `bg-gain/20`/`bg-loss/20` this file used before this task — that opacity-modifier form was found to render no background at all, since `gain`/`loss` are registered as bare `var(--color-x)` theme values that Tailwind cannot apply an opacity modifier to (see Task 1's and Task 4's fix notes for the full explanation). This task's rewrite corrects that pre-existing bug as a side effect of the full-file replacement below.
+
 Replace `src/app/[locale]/(app)/dashboard/heatmaps/HeatmapGrid.tsx`:
 
 ```tsx
@@ -1163,7 +1173,7 @@ export function HeatmapGrid({
                   return (
                     <td
                       key={c.key}
-                      className={`p-1 text-center ${value === undefined ? '' : value >= 0 ? 'bg-gain/20 text-gain' : 'bg-loss/20 text-loss'}`}
+                      className={`p-1 text-center ${value === undefined ? '' : value >= 0 ? 'bg-gain-dim text-gain' : 'bg-loss-dim text-loss'}`}
                     >
                       {value !== undefined ? value.toFixed(1) : ''}
                     </td>
