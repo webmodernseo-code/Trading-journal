@@ -175,6 +175,27 @@
         "title": "Calculateur de taille de position",
         "description": "Calcule ta taille de position idéale à partir de ton risque et de la distance de ton stop."
       }
+    },
+    "howItWorks": {
+      "eyebrow": "Le parcours",
+      "title": "Comment ça marche",
+      "tagline": "Quatre étapes, zéro friction",
+      "step1": {
+        "title": "Crée ton compte",
+        "description": "Inscription en 30 secondes, essai gratuit de 14 jours sans carte bancaire."
+      },
+      "step2": {
+        "title": "Enregistre tes trades",
+        "description": "P&L, risque et R-multiple calculés automatiquement à partir de tes prix."
+      },
+      "step3": {
+        "title": "Suis tes stats & erreurs",
+        "description": "Dashboard complet, heatmaps de performance, suivi de discipline."
+      },
+      "step4": {
+        "title": "Progresse",
+        "description": "Identifie tes erreurs récurrentes et resserre ta discipline trade après trade."
+      }
     }
   }
 }

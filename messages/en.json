@@ -175,6 +175,27 @@
         "title": "Position size calculator",
         "description": "Calculate your ideal position size from your risk and your stop distance."
       }
+    },
+    "howItWorks": {
+      "eyebrow": "The journey",
+      "title": "How it works",
+      "tagline": "Four steps, zero friction",
+      "step1": {
+        "title": "Create your account",
+        "description": "Sign up in 30 seconds, 14-day free trial, no credit card required."
+      },
+      "step2": {
+        "title": "Log your trades",
+        "description": "P&L, risk, and R-multiple calculated automatically from your prices."
+      },
+      "step3": {
+        "title": "Track your stats & mistakes",
+        "description": "Complete dashboard, performance heatmaps, discipline tracking."
+      },
+      "step4": {
+        "title": "Improve",
+        "description": "Spot your recurring mistakes and tighten your discipline trade after trade."
+      }
     }
   }
 }
