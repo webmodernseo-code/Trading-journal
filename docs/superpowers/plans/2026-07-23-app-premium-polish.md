@@ -78,7 +78,9 @@ In `src/app/globals.css`, add these lines to the `:root { ... }` block (after `-
   --color-warning: #fbbf24;
   --color-warning-dim: rgba(251, 191, 36, 0.14);
   --color-asset-commodity: #c4b5fd;
+  --color-asset-commodity-dim: rgba(196, 181, 253, 0.14);
   --color-asset-index: #5eead4;
+  --color-asset-index-dim: rgba(94, 234, 212, 0.14);
 ```
 
 (`--color-gain-dim`/`--color-loss-dim` are inserted as new lines right after the existing `--color-gain: #34d399;` / `--color-loss: #fb7185;` declarations, not after `--color-cta` — place them immediately following their respective base color for readability, matching how `--color-info`/`--color-info-dim` already sit next to each other.)
@@ -93,7 +95,9 @@ And these lines to the `:root[data-theme='light'] { ... }` block (after `--color
   --color-warning: #d97706;
   --color-warning-dim: rgba(217, 119, 6, 0.1);
   --color-asset-commodity: #7c3aed;
+  --color-asset-commodity-dim: rgba(124, 58, 237, 0.1);
   --color-asset-index: #0d9488;
+  --color-asset-index-dim: rgba(13, 148, 136, 0.1);
 ```
 
 - [ ] **Step 2: Map the tokens in Tailwind**
@@ -106,7 +110,9 @@ In `tailwind.config.ts`, add `'gain-dim': 'var(--color-gain-dim)'` immediately a
         warning: 'var(--color-warning)',
         'warning-dim': 'var(--color-warning-dim)',
         'asset-commodity': 'var(--color-asset-commodity)',
+        'asset-commodity-dim': 'var(--color-asset-commodity-dim)',
         'asset-index': 'var(--color-asset-index)',
+        'asset-index-dim': 'var(--color-asset-index-dim)',
 ```
 
 - [ ] **Step 3: Verify the app still builds**
@@ -722,8 +728,10 @@ git commit -m "feat: add trash icon to instrument/strategy delete buttons"
 - Modify: `messages/fr.json`, `messages/en.json`
 
 **Interfaces:**
-- Consumes: `asset-commodity`/`asset-index`/`info`/`warning` tokens (Task 1).
+- Consumes: `asset-commodity`/`asset-commodity-dim`/`asset-index`/`asset-index-dim`/`info-dim`/`warning-dim` tokens (Task 1).
 - Produces: `AssetClassBadge` component (`{ assetClass: Instrument['assetClass'] }` prop) — reusable if a later task needs it elsewhere (e.g. the trade form/list), not used outside this task for now.
+
+Note: the badge backgrounds use the concrete `-dim` tokens (`bg-asset-commodity-dim`, etc.), not Tailwind's `color/N` opacity-modifier syntax — `asset-commodity`/`asset-index` are registered in `tailwind.config.ts` as bare `var(--color-x)` references, and Tailwind cannot apply an opacity modifier to an opaque CSS-variable string (it silently produces no CSS at all — the same failure mode found and fixed in Task 4's `StatCard`). Task 1, as corrected, already defines `--color-asset-commodity-dim`/`--color-asset-index-dim` as concrete `rgba(...)` values for exactly this reason.
 
 - [ ] **Step 1: Create the badge component**
 
@@ -736,8 +744,8 @@ import type { Instrument } from '@/db/schema';
 const CLASS_STYLES: Record<Instrument['assetClass'], string> = {
   forex: 'bg-info-dim text-info',
   crypto: 'bg-warning-dim text-warning',
-  commodity: 'bg-asset-commodity/15 text-asset-commodity',
-  index: 'bg-asset-index/15 text-asset-index',
+  commodity: 'bg-asset-commodity-dim text-asset-commodity',
+  index: 'bg-asset-index-dim text-asset-index',
   other: 'bg-surface-2 text-text-muted',
 };
 
@@ -1551,6 +1559,8 @@ export async function clearDemoData() {
 
 - [ ] **Step 2: Create the banner component**
 
+Note: the banner background is `bg-accent-dim` with no opacity modifier — `accent-dim` is already a translucent tinted color (`rgba(...)`), and Tailwind cannot apply an additional opacity modifier (`/N`) on top of a color that resolves to a bare `var(--color-x)` reference (confirmed failure mode, same root cause as Task 4's fix). Do not add a `/N` suffix here.
+
 `src/app/[locale]/(app)/dashboard/DemoBanner.tsx`:
 
 ```tsx
@@ -1560,7 +1570,7 @@ import { clearDemoData } from './actions';
 export async function DemoBanner() {
   const t = await getTranslations('dashboard.demoBanner');
   return (
-    <div className="flex flex-col items-start justify-between gap-2 rounded-xl border border-accent-dim bg-accent-dim/40 p-3 text-sm sm:flex-row sm:items-center">
+    <div className="flex flex-col items-start justify-between gap-2 rounded-xl border border-accent-dim bg-accent-dim p-3 text-sm sm:flex-row sm:items-center">
       <span className="text-text-primary">{t('text')}</span>
       <form action={clearDemoData}>
         <button type="submit" className="whitespace-nowrap rounded-md border border-accent px-3 py-1.5 text-xs font-bold text-accent">
