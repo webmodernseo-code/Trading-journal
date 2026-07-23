@@ -1,5 +1,6 @@
 import { eq } from 'drizzle-orm';
 import { getTranslations } from 'next-intl/server';
+import { Trash2 } from 'lucide-react';
 import { db } from '@/db/client';
 import { strategies } from '@/db/schema';
 import { requireUser } from '@/lib/auth-helpers';
@@ -20,7 +21,10 @@ export default async function StrategiesPage() {
           <li key={strategy.id} className="flex items-center justify-between rounded-md border border-border-subtle bg-surface p-3">
             <span className="text-text-primary">{strategy.name}{strategy.description ? ` — ${strategy.description}` : ''}</span>
             <form action={async () => { 'use server'; await deleteStrategy(strategy.id); }}>
-              <button type="submit" className="text-sm text-loss">{t('delete')}</button>
+              <button type="submit" className="flex items-center gap-1 text-sm text-loss">
+                <Trash2 size={13} />
+                {t('delete')}
+              </button>
             </form>
           </li>
         ))}

@@ -1,5 +1,6 @@
 import { eq } from 'drizzle-orm';
 import { getTranslations } from 'next-intl/server';
+import { Trash2 } from 'lucide-react';
 import { db } from '@/db/client';
 import { instruments } from '@/db/schema';
 import { requireUser } from '@/lib/auth-helpers';
@@ -22,7 +23,10 @@ export default async function InstrumentsPage() {
               {instrument.name} — {instrument.assetClass} — {t('pointValue').toLowerCase()}: {instrument.pointValue}
             </span>
             <form action={async () => { 'use server'; await deleteInstrument(instrument.id); }}>
-              <button type="submit" className="text-sm text-loss">{t('delete')}</button>
+              <button type="submit" className="flex items-center gap-1 text-sm text-loss">
+                <Trash2 size={13} />
+                {t('delete')}
+              </button>
             </form>
           </li>
         ))}
