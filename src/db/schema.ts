@@ -19,6 +19,7 @@ export const instruments = pgTable('instruments', {
   name: text('name').notNull(),
   assetClass: text('asset_class', { enum: ['forex', 'commodity', 'crypto', 'index', 'other'] }).notNull(),
   pointValue: doublePrecision('point_value').notNull(),
+  isDemo: boolean('is_demo').notNull().default(false),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
@@ -27,6 +28,7 @@ export const strategies = pgTable('strategies', {
   userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
   name: text('name').notNull(),
   description: text('description'),
+  isDemo: boolean('is_demo').notNull().default(false),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
@@ -57,6 +59,7 @@ export const trades = pgTable('trades', {
   pnlOverride: boolean('pnl_override').notNull().default(false),
   riskAmount: doublePrecision('risk_amount'),
   notes: text('notes'),
+  isDemo: boolean('is_demo').notNull().default(false),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 });

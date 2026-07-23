@@ -15,6 +15,13 @@
       "when": 1784703264141,
       "tag": "0001_clean_kang",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1784847286265,
+      "tag": "0002_steep_reaper",
+      "breakpoints": true
     }
   ]
 }
