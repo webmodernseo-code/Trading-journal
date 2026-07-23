@@ -236,6 +236,30 @@
       },
       "cta": "Démarrer l'essai gratuit",
       "noCard": "Aucune carte bancaire requise pour l'essai."
+    },
+    "faq": {
+      "eyebrow": "Questions fréquentes",
+      "title": "Tout ce que tu te demandes",
+      "q1": {
+        "question": "Puis-je annuler à tout moment ?",
+        "answer": "Oui. L'essai gratuit de 14 jours ne demande pas de carte bancaire, et les formules mensuelles sont sans engagement."
+      },
+      "q2": {
+        "question": "Mes données sont-elles en sécurité ?",
+        "answer": "Tes données sont stockées de façon sécurisée et ne sont jamais partagées ni revendues à des tiers."
+      },
+      "q3": {
+        "question": "Puis-je utiliser l'app sur mobile ?",
+        "answer": "Oui, l'app fonctionne directement dans le navigateur de ton téléphone, aucune installation nécessaire."
+      },
+      "q4": {
+        "question": "Le calcul du P&L est-il automatique ?",
+        "answer": "Oui, à partir de tes prix d'entrée/sortie et de la valeur du point de ton instrument. Tu peux toujours corriger manuellement si besoin."
+      },
+      "q5": {
+        "question": "Puis-je changer la devise de mon compte de trading ?",
+        "answer": "Pas pour l'instant : l'app gère un compte de trading en euros uniquement. Le sélecteur de devise ci-dessus ne concerne que l'affichage du prix de l'abonnement."
+      }
     }
   }
 }

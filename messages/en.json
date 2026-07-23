@@ -236,6 +236,30 @@
       },
       "cta": "Start the free trial",
       "noCard": "No credit card required for the trial."
+    },
+    "faq": {
+      "eyebrow": "Frequently asked questions",
+      "title": "Everything you're wondering about",
+      "q1": {
+        "question": "Can I cancel anytime?",
+        "answer": "Yes. The 14-day free trial requires no credit card, and monthly plans have no commitment."
+      },
+      "q2": {
+        "question": "Is my data secure?",
+        "answer": "Your data is stored securely and is never shared or sold to third parties."
+      },
+      "q3": {
+        "question": "Can I use the app on mobile?",
+        "answer": "Yes, the app works directly in your phone's browser, no installation required."
+      },
+      "q4": {
+        "question": "Is P&L calculated automatically?",
+        "answer": "Yes, from your entry/exit prices and your instrument's point value. You can always correct it manually if needed."
+      },
+      "q5": {
+        "question": "Can I change my trading account's currency?",
+        "answer": "Not yet: the app manages a euro-only trading account. The currency switcher above only affects how the subscription price is displayed."
+      }
     }
   }
 }
