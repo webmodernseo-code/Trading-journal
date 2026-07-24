@@ -20,7 +20,7 @@ export default async function InstrumentsPage() {
       <ul className="mt-4 space-y-2">
         {rows.map((instrument) => (
           <li key={instrument.id} className="flex flex-wrap items-center justify-between gap-2 rounded-md border border-border-subtle bg-surface p-3">
-            <span className="flex flex-wrap items-center gap-2 break-words text-text-primary">
+            <span className="flex min-w-0 flex-wrap items-center gap-2 break-words text-text-primary">
               {instrument.name}
               <AssetClassBadge assetClass={instrument.assetClass} />
               — {t('pointValue').toLowerCase()}: {instrument.pointValue}
