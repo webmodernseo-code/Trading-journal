@@ -18,8 +18,8 @@ export default async function StrategiesPage() {
       <StrategyForm />
       <ul className="mt-4 space-y-2">
         {rows.map((strategy) => (
-          <li key={strategy.id} className="flex items-center justify-between rounded-md border border-border-subtle bg-surface p-3">
-            <span className="text-text-primary">{strategy.name}{strategy.description ? ` — ${strategy.description}` : ''}</span>
+          <li key={strategy.id} className="flex flex-wrap items-center justify-between gap-2 rounded-md border border-border-subtle bg-surface p-3">
+            <span className="min-w-0 text-text-primary">{strategy.name}{strategy.description ? ` — ${strategy.description}` : ''}</span>
             <form action={async () => { 'use server'; await deleteStrategy(strategy.id); }}>
               <button type="submit" className="flex items-center gap-1 text-sm text-loss">
                 <Trash2 size={13} />
