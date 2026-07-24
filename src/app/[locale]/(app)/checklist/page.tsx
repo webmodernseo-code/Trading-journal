@@ -22,7 +22,7 @@ export default async function ChecklistPage() {
       <ul className="mt-4 space-y-2">
         {rows.map((rule) => (
           <li key={rule.id} className="flex flex-wrap items-center justify-between gap-2 rounded-md border border-border-subtle bg-surface p-3">
-            <span className={`min-w-0 ${rule.active ? 'text-text-primary' : 'text-text-muted line-through'}`}>{rule.label}</span>
+            <span className={`min-w-0 break-words ${rule.active ? 'text-text-primary' : 'text-text-muted line-through'}`}>{rule.label}</span>
             <form action={async () => { 'use server'; await toggleChecklistRuleActive(rule.id, !rule.active); }}>
               <button type="submit" className="text-sm text-accent">
                 {rule.active ? t('deactivate') : t('activate')}
